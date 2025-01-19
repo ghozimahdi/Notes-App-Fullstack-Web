@@ -4,37 +4,16 @@ import {GetAllNotesUseCase} from "../../domain/usecase/get-all-notes.use-case";
 import {CreateNoteUseCase} from "../../domain/usecase/create-note.use-case";
 import {UpdateNoteUseCase} from "../../domain/usecase/update-note.use-case";
 import {DeleteNoteUseCase} from "../../domain/usecase/delete-note.use-case";
+import {inject, injectable} from "inversify";
 
-interface NoteControllerParams {
-  getAllNotesUseCase: GetAllNotesUseCase;
-  getNoteByIdUseCase: GetNoteByIdUseCase;
-  createNoteUseCase: CreateNoteUseCase;
-  updateNoteUseCase: UpdateNoteUseCase;
-  deleteNoteUseCase: DeleteNoteUseCase;
-}
+@injectable()
+export class NoteController {
 
-class NoteController {
-
-  private getAllNotesUseCase: GetAllNotesUseCase;
-  private getNoteByIdUseCase: GetNoteByIdUseCase;
-  private createNoteUseCase: CreateNoteUseCase;
-  private updateNoteUseCase: UpdateNoteUseCase;
-  private deleteNoteUseCase: DeleteNoteUseCase;
-
-  constructor({
-                getAllNotesUseCase,
-                getNoteByIdUseCase,
-                createNoteUseCase,
-                updateNoteUseCase,
-                deleteNoteUseCase,
-              }: NoteControllerParams) {
-
-    this.getAllNotesUseCase = getAllNotesUseCase;
-    this.getNoteByIdUseCase = getNoteByIdUseCase;
-    this.createNoteUseCase = createNoteUseCase;
-    this.updateNoteUseCase = updateNoteUseCase;
-    this.deleteNoteUseCase = deleteNoteUseCase;
-  }
+  constructor(@inject(GetAllNotesUseCase) private getAllNotesUseCase: GetAllNotesUseCase,
+              @inject(GetNoteByIdUseCase) private getNoteByIdUseCase: GetNoteByIdUseCase,
+              @inject(CreateNoteUseCase) private createNoteUseCase: CreateNoteUseCase,
+              @inject(UpdateNoteUseCase) private updateNoteUseCase: UpdateNoteUseCase,
+              @inject(DeleteNoteUseCase) private deleteNoteUseCase: DeleteNoteUseCase) {}
 
   getAllNotes(_: Request, res: Response) {
     const notes = this.getAllNotesUseCase.execute();
@@ -78,5 +57,3 @@ class NoteController {
     res.status(204).send();
   }
 }
-
-export {NoteController, NoteControllerParams};

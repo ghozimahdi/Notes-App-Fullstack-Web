@@ -16,10 +16,15 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.7",
     "express": "^4.21.2",
+    "inversify": "^6.2.1",
+    "inversify-express-utils": "^6.4.10",
+    "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"
   },
   "devDependencies": {
+    "@types/inversify": "^2.0.32",
+    "@types/reflect-metadata": "^0.0.5",
     "nodemon": "^3.1.9",
     "ts-node-dev": "^2.0.0"
   }

@@ -1,10 +1,12 @@
-import NoteRepository from "../repository/note.repository";
+import {NoteRepository, NoteRepositoryDI} from "../repository/note.repository";
 import {NoteModel} from "../model/note.model";
-import NoteRepositoryImpl from "../../data/respository/note-repository.impl";
+import {inject, injectable} from "inversify";
 
+@injectable()
 export class GetAllNotesUseCase {
-  constructor(private noteRepository: NoteRepository) {
-  }
+  constructor(
+    @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
+  ) {}
 
   execute(): NoteModel[] {
     return this.noteRepository.getAllNotes();

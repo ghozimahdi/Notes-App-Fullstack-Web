@@ -1,13 +1,19 @@
 import {NoteModel} from "../model/note.model";
 
-export default interface NoteRepository {
-    getAllNotes(): NoteModel[];
+const NoteRepositoryDI = {
+  Name: Symbol.for('NoteRepository'),
+};
 
-    getNoteById(id: number): NoteModel | undefined;
+interface NoteRepository {
+  getAllNotes(): NoteModel[];
 
-    createNote(newNote: Omit<NoteModel, 'id'>): NoteModel;
+  getNoteById(id: number): NoteModel | undefined;
 
-    updateNote(id: number, updatedNote: Partial<Omit<NoteModel, 'id'>>): NoteModel | undefined;
+  createNote(newNote: Omit<NoteModel, 'id'>): NoteModel;
 
-    deleteNote(id: number): boolean;
+  updateNote(id: number, updatedNote: Partial<Omit<NoteModel, 'id'>>): NoteModel | undefined;
+
+  deleteNote(id: number): boolean;
 }
+
+export {NoteRepository, NoteRepositoryDI}

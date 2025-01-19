@@ -1,9 +1,13 @@
-import NoteRepository from "../repository/note.repository";
+import {inject, injectable} from "inversify";
+import {NoteRepository, NoteRepositoryDI} from "../repository/note.repository";
 
+@injectable()
 export class DeleteNoteUseCase {
-  constructor(private repository: NoteRepository) {}
+  constructor(
+    @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
+  ) {}
 
   execute(id: number): boolean {
-    return this.repository.deleteNote(id);
+    return this.noteRepository.deleteNote(id);
   }
 }
