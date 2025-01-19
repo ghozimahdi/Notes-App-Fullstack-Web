@@ -8,7 +8,7 @@ export class GetAllNotesUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  execute(): NoteModel[] {
+  async execute(): Promise<NoteModel[]> {
     return this.noteRepository.getAllNotes();
   }
 }

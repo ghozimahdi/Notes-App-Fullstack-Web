@@ -11,14 +11,14 @@ import {NoteController} from "./presentation/controllers/note.controller";
 
 const container = new Container();
 
-container.bind(NoteDatasource);
+container.bind(NoteDatasource).toSelf();
 container.bind<NoteRepository>(NoteRepositoryDI.Name).to(NoteRepositoryImpl);
 
-container.bind(CreateNoteUseCase);
-container.bind(DeleteNoteUseCase);
-container.bind(GetAllNotesUseCase);
-container.bind(GetNoteByIdUseCase);
-container.bind(UpdateNoteUseCase);
+container.bind(CreateNoteUseCase).toSelf();
+container.bind(DeleteNoteUseCase).toSelf();
+container.bind(GetAllNotesUseCase).toSelf();
+container.bind(GetNoteByIdUseCase).toSelf();
+container.bind(UpdateNoteUseCase).toSelf();
 
 container.bind(NoteController).toSelf();
 

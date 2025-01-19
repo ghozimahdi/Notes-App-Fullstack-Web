@@ -8,7 +8,7 @@ export class UpdateNoteUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  execute(id: number, updatedNote: Partial<Omit<NoteModel, 'id'>>): NoteModel | undefined {
+  async execute(id: number, updatedNote: Partial<Omit<NoteModel, 'id'>>): Promise<NoteModel | undefined> {
     return this.noteRepository.updateNote(id, updatedNote);
   }
 }
