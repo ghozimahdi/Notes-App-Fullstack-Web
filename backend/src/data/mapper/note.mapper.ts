@@ -1,8 +1,8 @@
-import {Note} from "../../domain/model/Note";
-import {NoteData} from "../model/NoteData";
+import {NoteModel} from "../../domain/model/note.model";
+import {NoteData} from "../model/note.data";
 
-export const NoteMapper = {
-    mapFromData(noteData: NoteData): Note {
+export const noteMapper = {
+    mapFromData(noteData: NoteData): NoteModel {
         return {
             id: noteData.id,
             title: noteData.title,
@@ -11,7 +11,7 @@ export const NoteMapper = {
             archived: noteData.archived,
         };
     },
-    mapFromDomain(note: Note): NoteData {
+    mapFromDomain(note: NoteModel): NoteData {
         return {
             id: note.id,
             title: note.title,

@@ -1,6 +1,6 @@
-import {NoteData} from "../model/NoteData";
+import {NoteData} from "../model/note.data";
 
-class NoteDataSource {
+class NoteDatasource {
     private notes: NoteData[] = [
         {
             id: 1,
@@ -99,4 +99,4 @@ class NoteDataSource {
     }
 }
 
-export default new NoteDataSource();
+export default NoteDatasource;
