@@ -1,16 +1,20 @@
 import {Request, Response} from 'express';
-import NoteRepository from "../../data/respository/NoteRepository";
-
+import getAllNotesUseCase from "../../domain/GetAllNotesUseCase";
+import getNoteByIdUseCase from "../../domain/GetNoteByIdUseCase";
+import createNoteUseCase from "../../domain/CreateNoteUseCase";
+import updateNoteUseCase from "../../domain/UpdateNoteUseCase";
+import deleteNoteUseCase from "../../domain/DeleteNoteUseCase"
 
 class NoteController {
-    getAllNotes(req: Request, res: Response) {
-        const notes = NoteRepository.getAllNotes();
+
+    getAllNotes(_: Request, res: Response) {
+        const notes = getAllNotesUseCase.execute();
         res.status(200).json(notes);
     }
 
     getNoteById(req: Request, res: Response) {
         const {id} = req.params;
-        const note = NoteRepository.getNoteById(Number(id));
+        const note = getNoteByIdUseCase.execute(Number(id));
         if (!note) {
             res.status(404).json({message: 'Note not found'});
             return;
@@ -20,14 +24,14 @@ class NoteController {
 
     createNote(req: Request, res: Response) {
         const {title, body, createdAt, archived} = req.body;
-        const newNote = NoteRepository.createNote({title, body, createdAt, archived});
+        const newNote = createNoteUseCase.execute({title, body, createdAt, archived});
         res.status(201).json(newNote);
     }
 
     updateNote(req: Request, res: Response) {
         const {id} = req.params;
         const updatedNote = req.body;
-        const note = NoteRepository.updateNote(Number(id), updatedNote);
+        const note = updateNoteUseCase.execute(Number(id), updatedNote);
         if (!note) {
             res.status(404).json({message: 'Note not found'});
             return;
@@ -37,7 +41,7 @@ class NoteController {
 
     deleteNote(req: Request, res: Response) {
         const {id} = req.params;
-        const isDeleted = NoteRepository.deleteNote(Number(id));
+        const isDeleted = deleteNoteUseCase.execute(Number(id));
         if (!isDeleted) {
             res.status(404).json({message: 'Note not found'});
             return;
