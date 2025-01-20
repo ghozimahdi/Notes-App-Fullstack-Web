@@ -1,0 +1,57 @@
+# Notes App
+
+This is a fullstack website project developed using TypeScript. The application includes a backend built with Express and a frontend built with React using TypeScript.
+
+## Features
+- Fullstack web application.
+- Backend: Express.js (pure implementation using dependency injection with Inversify).
+- Frontend: React with TypeScript.
+
+## Project Structure
+```
+notes_app/
+├── backend/      # Backend code
+├── frontend/     # Frontend code
+├── node_modules/ # Node.js modules
+├── .gitignore    # Git ignore file
+├── install.sh    # Shell script to install dependencies
+├── package.json  # NPM package configuration
+├── package-lock.json # NPM lock file
+└── README.md     # Project documentation
+```
+
+## Prerequisites
+Make sure you have the following installed:
+- Node.js (v14 or higher recommended)
+- npm (Node Package Manager)
+- bash (for running shell scripts)
+
+## Installation and Running
+1. Clone the repository:
+   ```bash
+   git clone <repository-url>
+   cd notes_app
+   ```
+
+2. Make the `install.sh` script executable:
+   ```bash
+   chmod +x install.sh
+   ```
+
+3. Run the `install.sh` script to install dependencies for both backend and frontend:
+   ```bash
+   ./install.sh
+   ```
+
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
+
+## Usage
+- Once the development server is running, open your browser and navigate to `http://localhost:3000` to access the frontend.
+- The backend will also be running, typically on `http://localhost:5001` (adjust according to the configuration).
+
+## License
+This project is licensed under the [MIT License](LICENSE).
+
