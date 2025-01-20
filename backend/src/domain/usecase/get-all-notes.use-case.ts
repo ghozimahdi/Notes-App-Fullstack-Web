@@ -1,6 +1,7 @@
 import {NoteRepository, NoteRepositoryDI} from "../repository/note.repository";
-import {NoteModel} from "../model/note.model";
 import {inject, injectable} from "inversify";
+import {Result} from "../model/result";
+import {NoteModel} from "../model/note.model";
 
 @injectable()
 export class GetAllNotesUseCase {
@@ -8,7 +9,7 @@ export class GetAllNotesUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  async execute(): Promise<NoteModel[]> {
+  async execute(): Promise<Result<NoteModel[]>> {
     return this.noteRepository.getAllNotes();
   }
 }

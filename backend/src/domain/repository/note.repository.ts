@@ -1,19 +1,21 @@
 import {NoteModel} from "../model/note.model";
+import {Result} from "../model/result";
+import {UpdateNoteInput} from "../model/update-note.input";
 
 const NoteRepositoryDI = {
   Name: Symbol.for('NoteRepository'),
 };
 
 interface NoteRepository {
-  getAllNotes(): NoteModel[];
+  getAllNotes(): Promise<Result<NoteModel[]>>;
 
   getNoteById(id: number): NoteModel | undefined;
 
   createNote(newNote: Omit<NoteModel, 'id'>): NoteModel;
 
-  updateNote(id: number, updatedNote: Partial<Omit<NoteModel, 'id'>>): NoteModel | undefined;
+  updateNote(input: UpdateNoteInput): Promise<Result<NoteModel>>;
 
-  deleteNote(id: number): boolean;
+  deleteNote(id: number): Promise<Result<boolean>>;
 }
 
 export {NoteRepository, NoteRepositoryDI}

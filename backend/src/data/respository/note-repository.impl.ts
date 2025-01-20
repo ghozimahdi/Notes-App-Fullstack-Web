@@ -4,6 +4,9 @@ import {noteMapper} from '../mapper/note.mapper';
 import {NoteRepository} from "../../domain/repository/note.repository";
 import {inject, injectable} from "inversify";
 import NoteDatasource from "../datasource/note.datasource";
+import {Result} from "../../domain/model/result";
+import {handleError} from "../../domain/model/exception";
+import {UpdateNoteInput} from "../../domain/model/update-note.input";
 
 @injectable()
 class NoteRepositoryImpl implements NoteRepository {
@@ -11,9 +14,14 @@ class NoteRepositoryImpl implements NoteRepository {
     @inject(NoteDatasource) private noteDataSource: NoteDataSource
   ) {}
 
-  getAllNotes(): NoteModel[] {
-    const notesData = this.noteDataSource.getAllNotes();
-    return notesData.map(noteMapper.mapFromData);
+  async getAllNotes(): Promise<Result<NoteModel[]>> {
+    try {
+      const notesData = await this.noteDataSource.getAllNotes();
+      const notes: NoteModel[] = notesData.map(noteMapper.mapFromData);
+      return {data: notes, success: true};
+    } catch (e) {
+      handleError("Failed to fetch notes", e)
+    }
   }
 
   getNoteById(id: number): NoteModel | undefined {
@@ -27,14 +35,28 @@ class NoteRepositoryImpl implements NoteRepository {
     return noteMapper.mapFromData(createdNoteData);
   }
 
-  updateNote(id: number, updatedNote: Partial<Omit<NoteModel, 'id'>>): NoteModel | undefined {
-    const noteData = noteMapper.mapFromDomain({...updatedNote, id} as NoteModel);
-    const updatedNoteData = this.noteDataSource.updateNote(id, noteData);
-    return updatedNoteData ? noteMapper.mapFromData(updatedNoteData) : undefined;
+  async updateNote(input: UpdateNoteInput): Promise<Result<NoteModel>> {
+    try {
+      const noteData = noteMapper.mapFromDomain(input);
+      const updatedNoteData = await this.noteDataSource.updateNote(noteData);
+      const note = noteMapper.mapFromData(updatedNoteData);
+      return {
+        success: true,
+        message: 'Success update note',
+        data: note,
+      };
+    } catch (e) {
+      handleError('Failed to update noted, please try again!', e);
+    }
   }
 
-  deleteNote(id: number): boolean {
-    return this.noteDataSource.deleteNote(id);
+  async deleteNote(id: number): Promise<Result<boolean>> {
+    try {
+      this.noteDataSource.deleteNote(id);
+      return {success: true, message: "Successfully delete noted"};
+    } catch (e) {
+      handleError("Failed to delete noted, please try again!");
+    }
   }
 }
 
