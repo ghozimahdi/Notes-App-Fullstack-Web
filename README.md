@@ -4,7 +4,7 @@ This is a fullstack website project developed using TypeScript. The application 
 
 ## Features
 - Fullstack web application.
-- Backend: Express.js (pure implementation using dependency injection with Inversify).
+- Backend: Express.js (pure implementation, and using dependency injection with Inversify).
 - Frontend: React with TypeScript.
 
 ## Project Structure
