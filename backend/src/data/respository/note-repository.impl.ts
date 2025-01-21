@@ -71,7 +71,7 @@ class NoteRepositoryImpl implements NoteRepository {
       this.noteDataSource.deleteNote(id);
       return {success: true, message: "Successfully delete noted"};
     } catch (e) {
-      handleError("Failed to delete noted, please try again!");
+      handleError("Failed to delete noted, please try again!", e);
     }
   }
 }

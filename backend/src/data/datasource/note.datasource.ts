@@ -82,14 +82,14 @@ class NoteDatasource {
 
     const updated = {...this.notes[noteIndex], ...newNote};
     this.notes[noteIndex] = updated;
-
-    console.log(this.notes);
     return updated;
   }
 
   deleteNote(id: number): boolean {
     const noteIndex = this.notes.findIndex((note) => note.id === id);
-    if (noteIndex === -1) return false;
+    if (noteIndex === -1) {
+      throw new NotFoundException(`Note with id: ${id} not found`);
+    }
 
     this.notes.splice(noteIndex, 1);
     return true;
