@@ -53,8 +53,13 @@ class NoteDatasource {
     return this.notes;
   }
 
-  getNoteById(id: number): NoteData | undefined {
-    return this.notes.find((note) => note.id === id);
+  getNoteById(id: number): NoteData {
+    const note = this.notes.find((note) => note.id === id);
+    if (!note) {
+      throw new NotFoundException(`Note with id: ${id} not found`);
+    }
+
+    return note;
   }
 
   createNote(newNote: Omit<NoteData, 'id'>): NoteData {
@@ -67,7 +72,6 @@ class NoteDatasource {
   async updateNote(noteData: NoteData): Promise<NoteData> {
     const noteIndex = this.notes.findIndex((note) => note.id === noteData.id);
     if (noteIndex === -1) {
-      console.log('test')
       throw new NotFoundException(`Note with id: ${noteData.id} not found`);
     }
 
@@ -78,6 +82,8 @@ class NoteDatasource {
 
     const updated = {...this.notes[noteIndex], ...newNote};
     this.notes[noteIndex] = updated;
+
+    console.log(this.notes);
     return updated;
   }
 

@@ -9,9 +9,9 @@ const NoteRepositoryDI = {
 interface NoteRepository {
   getAllNotes(): Promise<Result<NoteModel[]>>;
 
-  getNoteById(id: number): NoteModel | undefined;
+  getNoteById(id: number): Promise<Result<NoteModel>>;
 
-  createNote(newNote: Omit<NoteModel, 'id'>): NoteModel;
+  createNote(newNote: Omit<NoteModel, 'id'>): Promise<Result<NoteModel>>;
 
   updateNote(input: UpdateNoteInput): Promise<Result<NoteModel>>;
 

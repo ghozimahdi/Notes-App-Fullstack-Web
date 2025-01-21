@@ -24,15 +24,31 @@ class NoteRepositoryImpl implements NoteRepository {
     }
   }
 
-  getNoteById(id: number): NoteModel | undefined {
-    const noteData = this.noteDataSource.getNoteById(id);
-    return noteData ? noteMapper.mapFromData(noteData) : undefined;
+  async getNoteById(id: number): Promise<Result<NoteModel>> {
+    try {
+      const noteData = this.noteDataSource.getNoteById(id);
+      const note = noteMapper.mapFromData(noteData);
+      return {
+        data: note,
+        success: true,
+      };
+    } catch (e) {
+      handleError("Failed to fetch a note", e);
+    }
   }
 
-  createNote(newNote: Omit<NoteModel, 'id'>): NoteModel {
-    const noteData = noteMapper.mapFromDomain({...newNote, id: 0});
-    const createdNoteData = this.noteDataSource.createNote(noteData);
-    return noteMapper.mapFromData(createdNoteData);
+  async createNote(newNote: Omit<NoteModel, 'id'>): Promise<Result<NoteModel>> {
+    try {
+      const noteData = noteMapper.mapFromDomain({...newNote, id: 0});
+      const createdNoteData = this.noteDataSource.createNote(noteData);
+      const note = noteMapper.mapFromData(createdNoteData);
+      return {
+        success: true,
+        data: note,
+      };
+    } catch (e) {
+      handleError("Failed to create a note", e);
+    }
   }
 
   async updateNote(input: UpdateNoteInput): Promise<Result<NoteModel>> {
