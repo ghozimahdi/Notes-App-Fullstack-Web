@@ -3,6 +3,7 @@ import express from 'express';
 import error_handler from "./presentation/middlewares/error.handler";
 import {InversifyExpressServer} from "inversify-express-utils";
 import {container} from "./inversify.config";
+import path from "path";
 
 export class App {
   async start() {
@@ -10,6 +11,7 @@ export class App {
     server.setConfig((app) => {
       app.use(express.json());
       app.use(express.urlencoded({extended: true}));
+      app.use(express.static(path.join(__dirname, 'public')));
     })
 
     server.setErrorConfig((app) => {
