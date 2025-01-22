@@ -147,7 +147,6 @@ export class NoteController {
           message: "Successfully delete noted",
           data: result,
         });
-        return;
       }
 
 
