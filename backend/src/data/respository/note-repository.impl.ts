@@ -1,11 +1,9 @@
 import NoteDataSource from '../datasource/note.datasource';
+import NoteDatasource from '../datasource/note.datasource';
 import {NoteModel} from '../../domain/model/note.model';
 import {noteMapper} from '../mapper/note.mapper';
 import {NoteRepository} from "../../domain/repository/note.repository";
 import {inject, injectable} from "inversify";
-import NoteDatasource from "../datasource/note.datasource";
-import {Result} from "../../domain/model/result";
-import {handleError} from "../../domain/model/exception";
 import {UpdateNoteInput} from "../../domain/model/update-note.input";
 
 @injectable()
@@ -14,64 +12,50 @@ class NoteRepositoryImpl implements NoteRepository {
     @inject(NoteDatasource) private noteDataSource: NoteDataSource
   ) {}
 
-  async getAllNotes(): Promise<Result<NoteModel[]>> {
+  async getAllNotes(): Promise<NoteModel[]> {
     try {
       const notesData = await this.noteDataSource.getAllNotes();
-      const notes: NoteModel[] = notesData.map(noteMapper.mapFromData);
-      return {data: notes, success: true};
+      return notesData.map(noteMapper.mapFromData);
     } catch (e) {
-      handleError("Failed to fetch notes", e)
+      throw e;
     }
   }
 
-  async getNoteById(id: number): Promise<Result<NoteModel>> {
+  async getNoteById(id: number): Promise<NoteModel> {
     try {
       const noteData = this.noteDataSource.getNoteById(id);
-      const note = noteMapper.mapFromData(noteData);
-      return {
-        data: note,
-        success: true,
-      };
+      return noteMapper.mapFromData(noteData);
     } catch (e) {
-      handleError("Failed to fetch a note", e);
+      throw e;
     }
   }
 
-  async createNote(newNote: Omit<NoteModel, 'id'>): Promise<Result<NoteModel>> {
+  async createNote(newNote: Omit<NoteModel, 'id'>): Promise<NoteModel> {
     try {
       const noteData = noteMapper.mapFromDomain({...newNote, id: 0});
       const createdNoteData = this.noteDataSource.createNote(noteData);
-      const note = noteMapper.mapFromData(createdNoteData);
-      return {
-        success: true,
-        data: note,
-      };
+      return noteMapper.mapFromData(createdNoteData);
     } catch (e) {
-      handleError("Failed to create a note", e);
+      throw e;
     }
   }
 
-  async updateNote(input: UpdateNoteInput): Promise<Result<NoteModel>> {
+  async updateNote(input: UpdateNoteInput): Promise<NoteModel> {
     try {
       const noteData = noteMapper.mapFromDomain(input);
       const updatedNoteData = await this.noteDataSource.updateNote(noteData);
-      const note = noteMapper.mapFromData(updatedNoteData);
-      return {
-        success: true,
-        message: 'Success update note',
-        data: note,
-      };
+      return noteMapper.mapFromData(updatedNoteData);
     } catch (e) {
-      handleError('Failed to update noted, please try again!', e);
+      throw e;
     }
   }
 
-  async deleteNote(id: number): Promise<Result<boolean>> {
+  async deleteNote(id: number): Promise<boolean> {
     try {
       this.noteDataSource.deleteNote(id);
-      return {success: true, message: "Successfully delete noted"};
+      return true;
     } catch (e) {
-      handleError("Failed to delete noted, please try again!", e);
+      throw e;
     }
   }
 }

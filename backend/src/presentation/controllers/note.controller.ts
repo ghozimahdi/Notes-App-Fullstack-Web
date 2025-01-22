@@ -6,7 +6,7 @@ import {CreateNoteUseCase} from '../../domain/usecase/create-note.use-case';
 import {UpdateNoteUseCase} from '../../domain/usecase/update-note.use-case';
 import {DeleteNoteUseCase} from '../../domain/usecase/delete-note.use-case';
 import {controller, httpGet, httpPost, httpPut, httpDelete} from 'inversify-express-utils';
-import {BadRequestException} from "../../domain/model/exception";
+import {handleError} from "../../domain/model/exception";
 import {UpdateNoteInput} from "../../domain/model/update-note.input";
 
 @controller('/notes')
@@ -21,59 +21,143 @@ export class NoteController {
 
   @httpGet('/')
   async getAllNotes(_: Request, res: Response) {
-    const result = await this.getAllNotesUseCase.execute();
-    res.status(200).json(result);
+    try {
+      const result = await this.getAllNotesUseCase.execute();
+      res.status(200).json({
+        success: true,
+        message: "Succeed",
+        data: result,
+      });
+    } catch (e) {
+      handleError("Failed to fetch notes", e)
+    }
   }
 
   @httpGet('/:id')
   async getNoteById(req: Request, res: Response) {
-    const id = Number(req.params.id);
-    if (isNaN(id)) {
-      throw new BadRequestException('Invalid ID')
-    }
+    try {
+      const id = Number(req.params.id);
+      if (isNaN(id)) {
+        res.status(400).json({
+          success: false,
+          message: "The provided ID is invalid. Please provide a numeric ID.",
+          data: null,
+        });
+      }
 
-    const note = await this.getNoteByIdUseCase.execute(id);
-    res.status(200).json(note);
+      const result = await this.getNoteByIdUseCase.execute(id);
+      if (result.id == 0) {
+        res.status(404).json({
+          success: false,
+          message: `Note with id: ${id} not found`,
+          data: result,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: "Succeed",
+        data: result,
+      });
+    } catch (e) {
+      handleError("Failed to fetch a note", e);
+    }
   }
 
   @httpPost('/')
   async createNote(req: Request, res: Response) {
-    const {title, body, createdAt, archived} = req.body;
+    try {
+      const {title, body, createdAt, archived} = req.body;
 
-    if (!title || !body) {
-      throw new BadRequestException('Title and body are required')
+      if (!title || !body) {
+        res.status(400).json({
+          success: false,
+          message: "Title and body are required",
+          data: null,
+        });
+      }
+
+      const result = await this.createNoteUseCase.execute({title, body, createdAt, archived});
+      res.status(200).json({
+        message: "Succeed",
+        success: true,
+        data: result,
+      });
+    } catch (e) {
+      handleError("Failed to create a note", e);
     }
-
-    const newNote = await this.createNoteUseCase.execute({title, body, createdAt, archived});
-    res.status(201).json(newNote);
   }
 
   @httpPut('/:id')
   async updateNote(req: Request, res: Response) {
-    const id = Number(req.params.id);
-    const {title, body, archived} = req.body;
+    try {
+      const id = Number(req.params.id);
+      const {title, body, archived} = req.body;
 
-    const input: UpdateNoteInput = {
-      id, title, body, archived
+      const input: UpdateNoteInput = {
+        id, title, body, archived
+      }
+
+      if (isNaN(id)) {
+        res.status(400).json({
+          success: false,
+          message: "The provided ID is invalid. Please provide a numeric ID.",
+          data: null,
+        });
+      }
+
+      const result = await this.updateNoteUseCase.execute(input);
+
+      if (result.id == 0) {
+        res.status(404).json({
+          success: false,
+          message: `Note with id: ${id} not found`,
+          data: result,
+        });
+      }
+
+      res.status(200).json({
+        success: true,
+        message: 'Success update note',
+        data: result,
+      });
+    } catch (e) {
+      handleError('Failed to update noted, please try again!', e);
     }
-
-    if (isNaN(id)) {
-      throw new BadRequestException('Invalid ID')
-    }
-
-    const note = await this.updateNoteUseCase.execute(input);
-    res.status(200).json(note);
   }
 
   @httpDelete('/:id')
   async deleteNote(req: Request, res: Response) {
-    const id = Number(req.params.id);
+    try {
+      const id = Number(req.params.id);
 
-    if (isNaN(id)) {
-      throw new BadRequestException('Invalid ID')
+      if (isNaN(id)) {
+        res.status(400).json({
+          success: false,
+          message: "The provided ID is invalid. Please provide a numeric ID.",
+          data: null,
+        });
+      }
+
+      const result = await this.deleteNoteUseCase.execute(id);
+
+      if (result) {
+        res.status(200).json({
+          success: true,
+          message: "Successfully delete noted",
+          data: result,
+        });
+        return;
+      }
+
+
+      res.status(404).json({
+        success: false,
+        message: `Note with id: ${id} not found`,
+        data: result,
+      });
+    } catch (e) {
+      handleError("Failed to delete noted, please try again!", e);
     }
-
-    const result = await this.deleteNoteUseCase.execute(id);
-    res.status(204).json(result);
   }
 }

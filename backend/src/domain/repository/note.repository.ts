@@ -1,5 +1,4 @@
 import {NoteModel} from "../model/note.model";
-import {Result} from "../model/result";
 import {UpdateNoteInput} from "../model/update-note.input";
 
 const NoteRepositoryDI = {
@@ -7,15 +6,15 @@ const NoteRepositoryDI = {
 };
 
 interface NoteRepository {
-  getAllNotes(): Promise<Result<NoteModel[]>>;
+  getAllNotes(): Promise<NoteModel[]>;
 
-  getNoteById(id: number): Promise<Result<NoteModel>>;
+  getNoteById(id: number): Promise<NoteModel>;
 
-  createNote(newNote: Omit<NoteModel, 'id'>): Promise<Result<NoteModel>>;
+  createNote(newNote: Omit<NoteModel, 'id'>): Promise<NoteModel>;
 
-  updateNote(input: UpdateNoteInput): Promise<Result<NoteModel>>;
+  updateNote(input: UpdateNoteInput): Promise<NoteModel>;
 
-  deleteNote(id: number): Promise<Result<boolean>>;
+  deleteNote(id: number): Promise<boolean>;
 }
 
 export {NoteRepository, NoteRepositoryDI}

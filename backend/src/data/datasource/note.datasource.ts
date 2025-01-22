@@ -1,6 +1,5 @@
 import {NoteData} from "../model/note.data";
 import {injectable} from "inversify";
-import {BadRequestException, NotFoundException} from "../../domain/model/exception";
 
 @injectable()
 class NoteDatasource {
@@ -50,49 +49,69 @@ class NoteDatasource {
   ];
 
   async getAllNotes(): Promise<NoteData[]> {
-    return this.notes;
+    try {
+      return this.notes;
+    } catch (e) {
+      throw e;
+    }
   }
 
-  getNoteById(id: number): NoteData {
-    const note = this.notes.find((note) => note.id === id);
-    if (!note) {
-      throw new NotFoundException(`Note with id: ${id} not found`);
-    }
+  getNoteById(id: number): NoteData | null {
+    try {
+      const note = this.notes.find((note) => note.id === id);
+      if (!note) {
+        return null;
+      }
 
-    return note;
+      return note;
+    } catch (e) {
+      throw e;
+    }
   }
 
   createNote(newNote: Omit<NoteData, 'id'>): NoteData {
-    const newId = this.notes.length + 1;
-    const createdNote = {id: newId, ...newNote};
-    this.notes.push(createdNote);
-    return createdNote;
+    try {
+      const newId = this.notes.length + 1;
+      const createdNote = {id: newId, ...newNote};
+      this.notes.push(createdNote);
+      return createdNote;
+    } catch (e) {
+      throw e;
+    }
   }
 
-  async updateNote(noteData: NoteData): Promise<NoteData> {
-    const noteIndex = this.notes.findIndex((note) => note.id === noteData.id);
-    if (noteIndex === -1) {
-      throw new NotFoundException(`Note with id: ${noteData.id} not found`);
-    }
+  async updateNote(noteData: NoteData): Promise<NoteData | null> {
+    try {
+      const noteIndex = this.notes.findIndex((note) => note.id === noteData.id);
+      if (noteIndex === -1) {
+        return null;
+      }
 
-    const newNote = {
-      ...noteData,
-      createdAt: new Date().toISOString(),
-    }
+      const newNote = {
+        ...noteData,
+        createdAt: new Date().toISOString(),
+      }
 
-    const updated = {...this.notes[noteIndex], ...newNote};
-    this.notes[noteIndex] = updated;
-    return updated;
+      const updated = {...this.notes[noteIndex], ...newNote};
+      this.notes[noteIndex] = updated;
+      return updated;
+    } catch (e) {
+      throw e;
+    }
   }
 
   deleteNote(id: number): boolean {
-    const noteIndex = this.notes.findIndex((note) => note.id === id);
-    if (noteIndex === -1) {
-      throw new NotFoundException(`Note with id: ${id} not found`);
-    }
+    try {
+      const noteIndex = this.notes.findIndex((note) => note.id === id);
+      if (noteIndex === -1) {
+        return false;
+      }
 
-    this.notes.splice(noteIndex, 1);
-    return true;
+      this.notes.splice(noteIndex, 1);
+      return true;
+    } catch (e) {
+      throw e;
+    }
   }
 }
 

@@ -10,7 +10,7 @@ export class UpdateNoteUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  async execute(input: UpdateNoteInput): Promise<Result<NoteModel>> {
+  async execute(input: UpdateNoteInput): Promise<NoteModel> {
     return this.noteRepository.updateNote(input);
   }
 }
