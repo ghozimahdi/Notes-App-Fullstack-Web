@@ -41,8 +41,13 @@ class NoteDatasource {
 
   async updateNote(noteData: NoteData): Promise<NoteData | null> {
     try {
-      return this.appDb.noteDao().findByIdAndUpdate(
-        noteData, {runValidators: true}
+      return await this.appDb.noteDao().findByIdAndUpdate(
+        noteData._id,
+        noteData,
+        {
+          runValidators: true,
+          new: true
+        }
       );
     } catch (e) {
       throw e;

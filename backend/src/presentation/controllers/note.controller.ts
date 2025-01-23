@@ -45,12 +45,12 @@ export class NoteController {
         });
       }
 
-      const result = await this.getNoteByIdUseCase.execute('6791b59dfb1bbd468bb48c20');
+      const result = await this.getNoteByIdUseCase.execute(id);
       if (!result.id) {
         return res.status(404).json({
           success: false,
           message: `Note with id: ${id} not found`,
-          data: result,
+          data: null,
         });
       }
 
@@ -113,7 +113,7 @@ export class NoteController {
         return res.status(404).json({
           success: false,
           message: `Note with id: ${id} not found`,
-          data: result,
+          data: null,
         });
       }
 
@@ -154,7 +154,7 @@ export class NoteController {
       return res.status(404).json({
         success: false,
         message: `Note with id: ${id} not found`,
-        data: result,
+        data: null,
       });
     } catch (e) {
       handleError("Failed to delete noted, please try again!", e);
