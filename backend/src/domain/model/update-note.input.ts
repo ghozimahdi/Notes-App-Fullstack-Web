@@ -1,5 +1,5 @@
 export interface UpdateNoteInput {
-  id: number;
+  id: string;
   title: string;
   body: string;
   archived: boolean;

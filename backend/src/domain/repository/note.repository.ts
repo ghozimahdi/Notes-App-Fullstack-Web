@@ -8,13 +8,13 @@ const NoteRepositoryDI = {
 interface NoteRepository {
   getAllNotes(): Promise<NoteModel[]>;
 
-  getNoteById(id: number): Promise<NoteModel>;
+  getNoteById(id: string): Promise<NoteModel>;
 
-  createNote(newNote: Omit<NoteModel, 'id'>): Promise<boolean>;
+  createNote(input: UpdateNoteInput): Promise<NoteModel>;
 
   updateNote(input: UpdateNoteInput): Promise<NoteModel>;
 
-  deleteNote(id: number): Promise<boolean>;
+  deleteNote(id: string): Promise<boolean>;
 }
 
 export {NoteRepository, NoteRepositoryDI}

@@ -21,7 +21,7 @@ class NoteRepositoryImpl implements NoteRepository {
     }
   }
 
-  async getNoteById(id: number): Promise<NoteModel> {
+  async getNoteById(id: string): Promise<NoteModel> {
     try {
       const noteData = await this.noteDataSource.getNoteById(id);
       return noteMapper.mapFromData(noteData);
@@ -30,9 +30,11 @@ class NoteRepositoryImpl implements NoteRepository {
     }
   }
 
-  async createNote(newNote: Omit<NoteModel, 'id'>): Promise<boolean> {
+  async createNote(input: UpdateNoteInput): Promise<NoteModel> {
     try {
-      return true;
+      const noteData = noteMapper.mapFromDomain(input);
+      const result = await this.noteDataSource.createNote(noteData);
+      return noteMapper.mapFromData(result);
     } catch (e) {
       throw e;
     }
@@ -47,7 +49,7 @@ class NoteRepositoryImpl implements NoteRepository {
     }
   }
 
-  async deleteNote(id: number): Promise<boolean> {
+  async deleteNote(id: string): Promise<boolean> {
     try {
       this.noteDataSource.deleteNote(id);
       return true;

@@ -14,7 +14,7 @@ class NoteDatasource {
     }
   }
 
-  async getNoteById(id: number): Promise<NoteData | null> {
+  async getNoteById(id: string): Promise<NoteData | null> {
     try {
       const note = await this.appDb.noteDao().findById(id);
       if (!note) {
@@ -27,13 +27,9 @@ class NoteDatasource {
     }
   }
 
-  createNote(newNote: NoteData): Promise<boolean> {
+  async createNote(newNote: NoteData): Promise<NoteData | null> {
     try {
-      // const newId = this.notes.length + 1;
-      // const createdNote = {id: newId, ...newNote};
-      // this.notes.push(createdNote);
-      // return createdNote;
-      return Promise.resolve(true);
+      return await this.appDb.noteDao().create(newNote);
     } catch (e) {
       throw e;
     }
@@ -59,7 +55,7 @@ class NoteDatasource {
     }
   }
 
-  deleteNote(id: number): Promise<boolean> {
+  async deleteNote(id: string): Promise<boolean> {
     try {
       // const noteIndex = this.notes.findIndex((note) => note.id === id);
       // if (noteIndex === -1) {

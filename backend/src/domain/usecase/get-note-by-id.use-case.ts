@@ -9,7 +9,7 @@ export class GetNoteByIdUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  async execute(id: number): Promise<NoteModel> {
+  async execute(id: string): Promise<NoteModel> {
     return this.noteRepository.getNoteById(id);
   }
 }

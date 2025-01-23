@@ -1,5 +1,5 @@
 export class NoteModel {
-  id: number = 0;
+  id: string = '';
   title: string = '';
   body: string = '';
   createdAt: string = '';

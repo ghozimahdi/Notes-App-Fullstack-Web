@@ -8,7 +8,7 @@ export class DeleteNoteUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  async execute(id: number): Promise<boolean> {
+  async execute(id: string): Promise<boolean> {
     return this.noteRepository.deleteNote(id);
   }
 }

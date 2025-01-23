@@ -2,6 +2,7 @@ import {NoteRepository, NoteRepositoryDI} from "../repository/note.repository";
 import {NoteModel} from "../model/note.model";
 import {inject, injectable} from "inversify";
 import {Result} from "../model/result";
+import {UpdateNoteInput} from "../model/update-note.input";
 
 @injectable()
 export class CreateNoteUseCase {
@@ -9,7 +10,7 @@ export class CreateNoteUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  async execute(newNote: Omit<NoteModel, 'id'>): Promise<boolean> {
-    return this.noteRepository.createNote(newNote);
+  async execute(input: UpdateNoteInput): Promise<NoteModel> {
+    return this.noteRepository.createNote(input);
   }
 }

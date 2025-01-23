@@ -36,8 +36,8 @@ export class NoteController {
   @httpGet('/:id')
   async getNoteById(req: Request, res: Response) {
     try {
-      const id = Number(req.params.id);
-      if (isNaN(id)) {
+      const id = String(req.params.id);
+      if (!id) {
         res.status(400).json({
           success: false,
           message: "The provided ID is invalid. Please provide a numeric ID.",
@@ -45,8 +45,8 @@ export class NoteController {
         });
       }
 
-      const result = await this.getNoteByIdUseCase.execute(id);
-      if (result.id == 0) {
+      const result = await this.getNoteByIdUseCase.execute('6791b59dfb1bbd468bb48c20');
+      if (!result.id) {
         res.status(404).json({
           success: false,
           message: `Note with id: ${id} not found`,
@@ -67,9 +67,10 @@ export class NoteController {
   @httpPost('/')
   async createNote(req: Request, res: Response) {
     try {
-      const {title, body, createdAt, archived} = req.body;
+      const input: UpdateNoteInput = req.body;
 
-      if (!title || !body) {
+      const requiredFields = [input.title, input.body];
+      if (requiredFields.some((field) => !field?.trim())) {
         res.status(400).json({
           success: false,
           message: "Title and body are required",
@@ -77,7 +78,7 @@ export class NoteController {
         });
       }
 
-      const result = await this.createNoteUseCase.execute({title, body, createdAt, archived});
+      const result = await this.createNoteUseCase.execute(input);
       res.status(200).json({
         message: "Succeed",
         success: true,
@@ -91,14 +92,14 @@ export class NoteController {
   @httpPut('/:id')
   async updateNote(req: Request, res: Response) {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
       const {title, body, archived} = req.body;
 
       const input: UpdateNoteInput = {
         id, title, body, archived
       }
 
-      if (isNaN(id)) {
+      if (!id) {
         res.status(400).json({
           success: false,
           message: "The provided ID is invalid. Please provide a numeric ID.",
@@ -108,7 +109,7 @@ export class NoteController {
 
       const result = await this.updateNoteUseCase.execute(input);
 
-      if (result.id == 0) {
+      if (!result.id) {
         res.status(404).json({
           success: false,
           message: `Note with id: ${id} not found`,
@@ -129,9 +130,9 @@ export class NoteController {
   @httpDelete('/:id')
   async deleteNote(req: Request, res: Response) {
     try {
-      const id = Number(req.params.id);
+      const id = String(req.params.id);
 
-      if (isNaN(id)) {
+      if (id) {
         res.status(400).json({
           success: false,
           message: "The provided ID is invalid. Please provide a numeric ID.",

@@ -7,6 +7,7 @@ export enum NoteType {
 }
 
 export class NoteData {
+  _id?: string;
   title?: string;
   body?: string;
   createdAt?: string;
