@@ -3,4 +3,5 @@ export interface UpdateNoteInput {
   title: string;
   body: string;
   archived: boolean;
+  noteType: string;
 }

@@ -93,10 +93,10 @@ export class NoteController {
   async updateNote(req: Request, res: Response) {
     try {
       const id = String(req.params.id);
-      const {title, body, archived} = req.body;
+      const {title, body, archived, noteType} = req.body;
 
       const input: UpdateNoteInput = {
-        id, title, body, archived
+        id, title, body, archived, noteType,
       }
 
       if (!id) {

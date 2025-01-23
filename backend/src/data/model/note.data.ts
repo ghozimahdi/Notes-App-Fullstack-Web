@@ -1,5 +1,3 @@
-import { Document } from 'mongoose';
-
 export enum NoteType {
   A = 'A',
   B = 'B',
@@ -18,13 +16,7 @@ export class NoteData {
     Object.assign(this, init);
   }
 
-  static fromDocument(doc: Document): NoteData {
-    return new NoteData({
-      title: doc.get('title'),
-      body: doc.get('body'),
-      createdAt: doc.get('createdAt'),
-      archived: doc.get('archived'),
-      noteType: doc.get('noteType'),
-    });
+  static mapNoteType(type: string): NoteType | undefined {
+    return Object.values(NoteType).includes(type as NoteType) ? (type as NoteType) : undefined;
   }
 }

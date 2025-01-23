@@ -27,9 +27,13 @@ class NoteDatasource {
     }
   }
 
-  async createNote(newNote: NoteData): Promise<NoteData | null> {
+  async createNote(newNote: Omit<NoteData, '_id'>): Promise<NoteData | null> {
     try {
-      return await this.appDb.noteDao().create(newNote);
+      const data = {
+        ...newNote,
+        createdAt: new Date().toISOString(),
+      };
+      return await this.appDb.noteDao().create(data);
     } catch (e) {
       throw e;
     }

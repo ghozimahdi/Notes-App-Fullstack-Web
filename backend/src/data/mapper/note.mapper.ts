@@ -10,6 +10,7 @@ export const noteMapper = {
       body: noteData?.body ?? '',
       createdAt: noteData?.createdAt ?? '',
       archived: noteData?.archived ?? false,
+      noteType: noteData?.noteType ?? '',
     };
   },
   mapFromDomain(input: UpdateNoteInput): Partial<NoteData> {
@@ -18,6 +19,7 @@ export const noteMapper = {
       title: input.title,
       body: input.body,
       archived: input.archived,
+      noteType: NoteData.mapNoteType(input.noteType),
     };
   },
 };

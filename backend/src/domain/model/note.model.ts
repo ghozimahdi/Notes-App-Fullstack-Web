@@ -4,6 +4,7 @@ export class NoteModel {
   body: string = '';
   createdAt: string = '';
   archived: boolean = false;
+  noteType: string = '';
 
   constructor(init?: Partial<NoteModel>) {
     Object.assign(this, init);
