@@ -23,7 +23,7 @@ export class NoteController {
   async getAllNotes(_: Request, res: Response) {
     try {
       const result = await this.getAllNotesUseCase.execute();
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "Succeed",
         data: result,
@@ -38,7 +38,7 @@ export class NoteController {
     try {
       const id = String(req.params.id);
       if (!id) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           message: "The provided ID is invalid. Please provide a numeric ID.",
           data: null,
@@ -47,14 +47,14 @@ export class NoteController {
 
       const result = await this.getNoteByIdUseCase.execute('6791b59dfb1bbd468bb48c20');
       if (!result.id) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: `Note with id: ${id} not found`,
           data: result,
         });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: "Succeed",
         data: result,
@@ -71,7 +71,7 @@ export class NoteController {
 
       const requiredFields = [input.title, input.body];
       if (requiredFields.some((field) => !field?.trim())) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           message: "Title and body are required",
           data: null,
@@ -79,7 +79,7 @@ export class NoteController {
       }
 
       const result = await this.createNoteUseCase.execute(input);
-      res.status(200).json({
+      return res.status(200).json({
         message: "Succeed",
         success: true,
         data: result,
@@ -100,7 +100,7 @@ export class NoteController {
       }
 
       if (!id) {
-        res.status(400).json({
+        return res.status(400).json({
           success: false,
           message: "The provided ID is invalid. Please provide a numeric ID.",
           data: null,
@@ -110,14 +110,14 @@ export class NoteController {
       const result = await this.updateNoteUseCase.execute(input);
 
       if (!result.id) {
-        res.status(404).json({
+        return res.status(404).json({
           success: false,
           message: `Note with id: ${id} not found`,
           data: result,
         });
       }
 
-      res.status(200).json({
+      return res.status(200).json({
         success: true,
         message: 'Success update note',
         data: result,
@@ -132,8 +132,8 @@ export class NoteController {
     try {
       const id = String(req.params.id);
 
-      if (id) {
-        res.status(400).json({
+      if (!id) {
+        return res.status(400).json({
           success: false,
           message: "The provided ID is invalid. Please provide a numeric ID.",
           data: null,
@@ -143,15 +143,15 @@ export class NoteController {
       const result = await this.deleteNoteUseCase.execute(id);
 
       if (result) {
-        res.status(200).json({
+        return res.status(200).json({
           success: true,
           message: "Successfully delete noted",
-          data: result,
+          data: null,
         });
       }
 
 
-      res.status(404).json({
+      return res.status(404).json({
         success: false,
         message: `Note with id: ${id} not found`,
         data: result,
