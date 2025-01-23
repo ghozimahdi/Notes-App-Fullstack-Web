@@ -41,19 +41,9 @@ class NoteDatasource {
 
   async updateNote(noteData: NoteData): Promise<NoteData | null> {
     try {
-      // const noteIndex = this.appDb.findIndex((note) => note.id === noteData.id);
-      // if (noteIndex === -1) {
-      //   return null;
-      // }
-      //
-      // const newNote = {
-      //   ...noteData,
-      //   createdAt: new Date().toISOString(),
-      // }
-      //
-      // const updated = {...this.notes[noteIndex], ...newNote};
-      // this.notes[noteIndex] = updated;
-      return null;
+      return this.appDb.noteDao().findByIdAndUpdate(
+        noteData, {runValidators: true}
+      );
     } catch (e) {
       throw e;
     }
@@ -61,13 +51,8 @@ class NoteDatasource {
 
   async deleteNote(id: string): Promise<boolean> {
     try {
-      // const noteIndex = this.notes.findIndex((note) => note.id === id);
-      // if (noteIndex === -1) {
-      //   return false;
-      // }
-      //
-      // this.notes.splice(noteIndex, 1);
-      return Promise.resolve(true);
+      const result = await this.appDb.noteDao().findByIdAndDelete(id)
+      return result != null;
     } catch (e) {
       throw e;
     }

@@ -43,7 +43,8 @@ class NoteRepositoryImpl implements NoteRepository {
   async updateNote(input: UpdateNoteInput): Promise<NoteModel> {
     try {
       const noteData = noteMapper.mapFromDomain(input);
-      return noteMapper.mapFromData(null);
+      const result = await this.noteDataSource.updateNote(noteData);
+      return noteMapper.mapFromData(result);
     } catch (e) {
       throw e;
     }
@@ -51,8 +52,7 @@ class NoteRepositoryImpl implements NoteRepository {
 
   async deleteNote(id: string): Promise<boolean> {
     try {
-      this.noteDataSource.deleteNote(id);
-      return true;
+      return this.noteDataSource.deleteNote(id);
     } catch (e) {
       throw e;
     }
