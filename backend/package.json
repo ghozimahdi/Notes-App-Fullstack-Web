@@ -24,6 +24,7 @@
   },
   "devDependencies": {
     "@types/inversify": "^2.0.32",
+    "@types/morgan": "^1.9.9",
     "@types/reflect-metadata": "^0.0.5",
     "nodemon": "^3.1.9",
     "ts-node-dev": "^2.0.0"

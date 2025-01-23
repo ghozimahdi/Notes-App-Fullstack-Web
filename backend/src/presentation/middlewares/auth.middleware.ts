@@ -1,13 +1,18 @@
 import {Request, Response, NextFunction} from 'express';
 
-const authMiddleware = (req: Request, res: Response, next: NextFunction) => {
+const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
+  try {
     const token = req.headers['authorization'];
     if (!token) {
-        return res.status(401).json({error: 'Unauthorized'});
+      res.status(401).json({error: 'Unauthorized'});
+      return;
     }
 
     // todo: validate token Anda di sini...
     next();
+  } catch (e) {
+    next(e);
+  }
 };
 
 export default authMiddleware;

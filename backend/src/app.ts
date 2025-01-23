@@ -6,6 +6,7 @@ import {container} from "./inversify.config";
 import path from "path";
 import {AppDatabase} from "./data/database/app.database";
 import {Seeds} from "./seeds";
+import morgan from "morgan";
 
 export class App {
   async start() {
@@ -18,6 +19,7 @@ export class App {
       app.use(express.json());
       app.use(express.urlencoded({extended: true}));
       app.use(express.static(path.join(__dirname, 'public')));
+      app.use(morgan('dev'))
     })
 
     server.setErrorConfig((app) => {

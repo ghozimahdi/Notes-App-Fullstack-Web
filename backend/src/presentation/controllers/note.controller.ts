@@ -8,6 +8,7 @@ import {DeleteNoteUseCase} from '../../domain/usecase/delete-note.use-case';
 import {controller, httpGet, httpPost, httpPut, httpDelete} from 'inversify-express-utils';
 import {handleError} from "../../domain/model/exception";
 import {UpdateNoteInput} from "../../domain/model/update-note.input";
+import authMiddleware from "../middlewares/auth.middleware";
 
 @controller('/notes')
 export class NoteController {
