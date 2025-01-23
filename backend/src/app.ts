@@ -4,9 +4,15 @@ import error_handler from "./presentation/middlewares/error.handler";
 import {InversifyExpressServer} from "inversify-express-utils";
 import {container} from "./inversify.config";
 import path from "path";
+import {AppDatabase} from "./data/database/app.database";
+import {Seeds} from "./seeds";
 
 export class App {
   async start() {
+    const appDb = container.get(AppDatabase);
+    await appDb.connect();
+    await Seeds.initData(appDb)
+
     const server = new InversifyExpressServer(container, null, {rootPath: '/api'});
     server.setConfig((app) => {
       app.use(express.json());

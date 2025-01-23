@@ -8,9 +8,11 @@ import {GetAllNotesUseCase} from "./domain/usecase/get-all-notes.use-case";
 import {GetNoteByIdUseCase} from "./domain/usecase/get-note-by-id.use-case";
 import {UpdateNoteUseCase} from "./domain/usecase/update-note.use-case";
 import {NoteController} from "./presentation/controllers/note.controller";
+import {AppDatabase} from "./data/database/app.database";
 
 const container = new Container();
 
+container.bind(AppDatabase).toSelf();
 container.bind(NoteDatasource).toSelf();
 container.bind<NoteRepository>(NoteRepositoryDI.Name).to(NoteRepositoryImpl);
 

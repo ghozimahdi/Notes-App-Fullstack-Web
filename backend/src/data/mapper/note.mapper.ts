@@ -12,9 +12,9 @@ export const noteMapper = {
       archived: noteData?.archived ?? false,
     };
   },
-  mapFromDomain(input: UpdateNoteInput): NoteData {
+  mapFromDomain(input: UpdateNoteInput): Partial<NoteData> {
     return {
-      id: input.id,
+      _id: input.id,
       title: input.title,
       body: input.body,
       archived: input.archived,

@@ -10,7 +10,7 @@ interface NoteRepository {
 
   getNoteById(id: number): Promise<NoteModel>;
 
-  createNote(newNote: Omit<NoteModel, 'id'>): Promise<NoteModel>;
+  createNote(newNote: Omit<NoteModel, 'id'>): Promise<boolean>;
 
   updateNote(input: UpdateNoteInput): Promise<NoteModel>;
 

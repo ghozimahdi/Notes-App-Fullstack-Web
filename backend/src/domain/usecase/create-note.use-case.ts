@@ -9,7 +9,7 @@ export class CreateNoteUseCase {
     @inject(NoteRepositoryDI.Name) private noteRepository: NoteRepository
   ) {}
 
-  async execute(newNote: Omit<NoteModel, 'id'>): Promise<NoteModel> {
+  async execute(newNote: Omit<NoteModel, 'id'>): Promise<boolean> {
     return this.noteRepository.createNote(newNote);
   }
 }
