@@ -2,13 +2,9 @@ import {Schema} from "mongoose";
 import {NoteType} from "../../model/note.data";
 
 export const NoteSchema: Schema = new Schema({
-  id: {
-    type: Number,
-    required: false,
-  },
   title: {
     type: String,
-    required: false,
+    required: [false, 'The title is cannot empty'],
   },
   body: {
     type: String,
