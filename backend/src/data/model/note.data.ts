@@ -11,6 +11,7 @@ export class NoteData {
   createdAt?: string;
   archived?: boolean;
   noteType?: NoteType;
+  userId?: string;
 
   constructor(init?: Partial<NoteData>) {
     Object.assign(this, init);

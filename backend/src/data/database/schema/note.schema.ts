@@ -24,8 +24,9 @@ export const NoteSchema: Schema = new Schema({
     enum: Object.values(NoteType),
     require: true,
   },
-  note: {
+  userId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Note"
+    ref: "User",
+    require: true,
   }
 });

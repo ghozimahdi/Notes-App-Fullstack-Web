@@ -5,12 +5,13 @@ import {UpdateNoteInput} from "../../domain/model/update-note.input";
 export const noteMapper = {
   mapFromData(noteData: NoteData | null): NoteModel {
     return {
+      userId: noteData?.userId ?? '',
       id: noteData?._id ?? '',
       title: noteData?.title ?? '',
       body: noteData?.body ?? '',
       createdAt: noteData?.createdAt ?? '',
       archived: noteData?.archived ?? false,
-      noteType: noteData?.noteType ?? '',
+      noteType: noteData?.noteType ?? ''
     };
   },
   mapFromDomain(input: UpdateNoteInput): Partial<NoteData> {
