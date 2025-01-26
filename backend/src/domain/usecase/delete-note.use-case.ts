@@ -1,6 +1,5 @@
 import {inject, injectable} from "inversify";
 import {NoteRepository, NoteRepositoryDI} from "../repository/note.repository";
-import {Result} from "../model/result";
 
 @injectable()
 export class DeleteNoteUseCase {

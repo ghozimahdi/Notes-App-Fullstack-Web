@@ -1,13 +1,14 @@
 import {NextFunction, Request, Response} from 'express';
 import {inject} from 'inversify';
-import {GetAllNotesUseCase} from '../../domain/usecase/get-all-notes.use-case';
-import {GetNoteByIdUseCase} from '../../domain/usecase/get-note-by-id.use-case';
-import {CreateNoteUseCase} from '../../domain/usecase/create-note.use-case';
-import {UpdateNoteUseCase} from '../../domain/usecase/update-note.use-case';
-import {DeleteNoteUseCase} from '../../domain/usecase/delete-note.use-case';
+import {GetAllNotesUseCase} from '../../../domain/usecase/get-all-notes.use-case';
+import {GetNoteByIdUseCase} from '../../../domain/usecase/get-note-by-id.use-case';
+import {CreateNoteUseCase} from '../../../domain/usecase/create-note.use-case';
+import {UpdateNoteUseCase} from '../../../domain/usecase/update-note.use-case';
+import {DeleteNoteUseCase} from '../../../domain/usecase/delete-note.use-case';
 import {controller, httpGet, httpPost, httpPut, httpDelete, next} from 'inversify-express-utils';
-import {BadRequestException, handleError, NotFoundException} from "../../domain/model/exception";
-import {UpdateNoteInput} from "../../domain/model/update-note.input";
+import {BadRequestException, handleError, NotFoundException} from "../../../domain/model/exception";
+import {UpdateNoteInput} from "../../../domain/model/update-note.input";
+import validateObjectId from "../../middlewares/validateObjectId";
 
 @controller('/notes')
 export class NoteController {
@@ -20,7 +21,7 @@ export class NoteController {
   ) {}
 
   @httpGet('/')
-  async getAllNotes(_: Request, res: Response, next: NextFunction) {
+  async getAllNotes(_: Request, res: Response) {
     try {
       const result = await this.getAllNotesUseCase.execute();
       return res.status(200).json({
@@ -33,7 +34,7 @@ export class NoteController {
     }
   }
 
-  @httpGet('/:id')
+  @httpGet('/:id', validateObjectId)
   async getNoteById(req: Request, res: Response, next: NextFunction) {
     try {
       const id = String(req.params.id);
@@ -77,7 +78,7 @@ export class NoteController {
     }
   }
 
-  @httpPut('/:id')
+  @httpPut('/:id', validateObjectId)
   async updateNote(req: Request, res: Response, next: NextFunction) {
     try {
       const id = String(req.params.id);
@@ -107,7 +108,7 @@ export class NoteController {
     }
   }
 
-  @httpDelete('/:id')
+  @httpDelete('/:id', validateObjectId)
   async deleteNote(req: Request, res: Response, next: NextFunction) {
     try {
       const id = String(req.params.id);

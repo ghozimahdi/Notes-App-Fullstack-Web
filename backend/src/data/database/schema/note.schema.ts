@@ -1,4 +1,4 @@
-import {Schema} from "mongoose";
+import mongoose, {Schema} from "mongoose";
 import {NoteType} from "../../model/note.data";
 
 export const NoteSchema: Schema = new Schema({
@@ -23,5 +23,9 @@ export const NoteSchema: Schema = new Schema({
     type: String,
     enum: Object.values(NoteType),
     require: true,
+  },
+  note: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Note"
   }
 });

@@ -13,8 +13,8 @@ class InternalServerException<T> extends Exception<T> {
 }
 
 class BadRequestException<T> extends Exception<T> {
-  constructor(message = "Bad Request", data?: T) {
-    super(400, message, data);
+  constructor(message?: string, data?: T) {
+    super(400, message ?? "Bad Request", data);
   }
 }
 

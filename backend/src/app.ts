@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
-import error_handler from "./presentation/middlewares/error.handler";
+import error_handler from "./presentation/middlewares/errorHandler";
 import {InversifyExpressServer} from "inversify-express-utils";
 import {container} from "./inversify.config";
 import path from "path";
@@ -16,7 +16,7 @@ export class App {
 
     const server = new InversifyExpressServer(container, null, {rootPath: '/api'});
     server.setConfig((app) => {
-      app.use(express.json());
+      app.use(express.json({limit: '10kb'}));
       app.use(express.urlencoded({extended: true}));
       app.use(express.static(path.join(__dirname, 'public')));
       app.use(morgan('dev'))

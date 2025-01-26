@@ -1,7 +1,6 @@
 import {NoteRepository, NoteRepositoryDI} from "../repository/note.repository";
 import {NoteModel} from "../model/note.model";
 import {inject, injectable} from "inversify";
-import {Result} from "../model/result";
 import {UpdateNoteInput} from "../model/update-note.input";
 
 @injectable()

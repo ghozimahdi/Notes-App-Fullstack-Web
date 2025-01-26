@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import {injectable} from "inversify";
 import {NoteData} from "../model/note.data";
 import {NoteSchema} from "./schema/note.schema";
+import {UserSchema} from "./schema/user.schema";
+import {UserData} from "../model/user.data";
 
 @injectable()
 export class AppDatabase {
@@ -17,5 +19,9 @@ export class AppDatabase {
 
   noteDao() {
     return mongoose.model<NoteData>('Note', NoteSchema);
+  }
+
+  userDao() {
+    return mongoose.model<UserData>('User', UserSchema);
   }
 }
