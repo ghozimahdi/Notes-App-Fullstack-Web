@@ -16,9 +16,8 @@ export class UserController {
     @inject(CreateUserUseCase) private createUserUseCase: CreateUserUseCase,
   ) {}
 
-
   @httpGet('/:id', validateObjectId)
-  async getUserById(req: Request, res: Response, next: NextFunction) {
+  async getUserById(req: Request, res: Response) {
     try {
       const id = String(req.params.id);
       const result = await this.getUserByIdUseCase.execute(id);

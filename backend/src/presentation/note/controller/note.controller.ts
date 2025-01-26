@@ -1,11 +1,11 @@
-import {NextFunction, Request, Response} from 'express';
+import {Response, Request, NextFunction} from "express";
 import {inject} from 'inversify';
 import {GetAllNotesUseCase} from '../../../domain/usecase/get-all-notes.use-case';
 import {GetNoteByIdUseCase} from '../../../domain/usecase/get-note-by-id.use-case';
 import {CreateNoteUseCase} from '../../../domain/usecase/create-note.use-case';
 import {UpdateNoteUseCase} from '../../../domain/usecase/update-note.use-case';
 import {DeleteNoteUseCase} from '../../../domain/usecase/delete-note.use-case';
-import {controller, httpGet, httpPost, httpPut, httpDelete, next} from 'inversify-express-utils';
+import {controller, httpGet, httpPost, httpPut, httpDelete} from 'inversify-express-utils';
 import {BadRequestException, handleError, NotFoundException} from "../../../domain/model/exception";
 import {UpdateNoteInput} from "../../../domain/model/update-note.input";
 import validateObjectId from "../../middlewares/validateObjectId";
@@ -21,14 +21,12 @@ export class NoteController {
   ) {}
 
   @httpGet('/')
-  async getAllNotes(_: Request, res: Response) {
+  async getAllNotes(req: Request, res: Response) {
     try {
+      console.log(req.cookies)
+
       const result = await this.getAllNotesUseCase.execute();
-      return res.status(200).json({
-        success: true,
-        message: "Succeed",
-        data: result,
-      });
+      return res.success(undefined, result);
     } catch (e) {
       handleError("Failed to fetch notes", e)
     }
@@ -47,11 +45,7 @@ export class NoteController {
         return next(new NotFoundException(`Note with id: ${id} not found`));
       }
 
-      return res.status(200).json({
-        success: true,
-        message: "Succeed",
-        data: result,
-      });
+      return res.success(undefined, result);
     } catch (e) {
       handleError("Failed to fetch a note", e);
     }
@@ -68,11 +62,7 @@ export class NoteController {
       }
 
       const result = await this.createNoteUseCase.execute(input);
-      return res.status(200).json({
-        message: "Succeed",
-        success: true,
-        data: result,
-      });
+      return res.success(undefined, result);
     } catch (e) {
       handleError("Failed to create a note", e);
     }
@@ -98,11 +88,7 @@ export class NoteController {
         return next(new NotFoundException(`Note with id: ${id} not found`));
       }
 
-      return res.status(200).json({
-        success: true,
-        message: 'Success update note',
-        data: result,
-      });
+      return res.success('Success update note', result);
     } catch (e) {
       handleError('Failed to update noted, please try again!', e);
     }
@@ -123,11 +109,7 @@ export class NoteController {
         return next(new NotFoundException(`Note with id: ${id} not found`))
       }
 
-      return res.status(200).json({
-        success: true,
-        message: "Successfully delete noted",
-        data: null,
-      });
+      return res.success('Successfully delete noted', undefined);
     } catch (e) {
       handleError("Failed to delete noted, please try again!", e);
     }

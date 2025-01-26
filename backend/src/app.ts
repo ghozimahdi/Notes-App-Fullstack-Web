@@ -7,6 +7,8 @@ import path from "path";
 import {AppDatabase} from "./data/database/app.database";
 import {Seeds} from "./seeds";
 import morgan from "morgan";
+import cookieParser from "cookie-parser";
+import {responseEnhancer} from "./presentation/middlewares/responseEnhancer";
 
 export class App {
   async start() {
@@ -19,7 +21,9 @@ export class App {
       app.use(express.json({limit: '10kb'}));
       app.use(express.urlencoded({extended: true}));
       app.use(express.static(path.join(__dirname, 'public')));
-      app.use(morgan('dev'))
+      app.use(morgan('dev'));
+      app.use(responseEnhancer);
+      app.use(cookieParser());
     })
 
     server.setErrorConfig((app) => {
