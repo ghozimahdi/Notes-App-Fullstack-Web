@@ -11,14 +11,17 @@ export class CreateUserUseCase {
   ) {}
 
   async execute(input: CreateUserInput): Promise<UserModel> {
-    const requiredFields = [
-      input.username,
-      input.password,
-      input.email,
-    ];
+    const missingFields = ["username", "password", "email"].filter(
+      (field) => {
+        const value = input[field as keyof CreateUserInput];
+        return typeof value !== "string" || !value.trim();
+      }
+    );
 
-    if (requiredFields.some((field) => !field?.trim())) {
-      throw new BadRequestException("All required fields must be filled except address");
+    if (missingFields.length > 0) {
+      throw new BadRequestException(
+        `The following required fields are missing or empty: ${missingFields.join(", ")}`
+      );
     }
 
     return this.repository.createUser(input);

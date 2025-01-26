@@ -26,10 +26,14 @@ export class UserDatasource {
         createdAt: new Date().toISOString(),
       };
 
-      console.log(data);
-      const result = await this.appDb.userDao().create(data);
-      console.log(result);
-      return result;
+      const createdUser = await this.appDb.userDao().create(data);
+
+      if (createdUser) {
+        const {password, role, ...userWithoutSensitiveData} = createdUser.toObject();
+        return userWithoutSensitiveData;
+      }
+
+      return null;
     } catch (e) {
       throw e;
     }

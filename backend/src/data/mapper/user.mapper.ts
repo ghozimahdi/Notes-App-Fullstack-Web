@@ -8,8 +8,8 @@ export const userMapper = {
       address: userData?.address ?? '',
       createdAt: userData?.createdAt ?? '',
       email: userData?.email ?? '',
-      password: userData?.password ?? '',
-      role: userData?.role ?? 0,
+      password: userData?.password ?? undefined,
+      role: userData?.role ?? undefined,
       username: userData?.username ?? '',
       id: userData?._id ?? ''
     };
