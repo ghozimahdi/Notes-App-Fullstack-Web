@@ -7,6 +7,7 @@ export const UserSchema: Schema = new Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: [true, 'Email is required'],
   },
   password: {

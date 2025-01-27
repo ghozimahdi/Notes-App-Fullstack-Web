@@ -9,12 +9,9 @@ import {GetNoteByIdUseCase} from "./domain/usecase/get-note-by-id.use-case";
 import {UpdateNoteUseCase} from "./domain/usecase/update-note.use-case";
 import {NoteController} from "./presentation/note/controller/note.controller";
 import {AppDatabase} from "./data/database/app.database";
-import {UserRepository, UserRepositoryDI} from "./domain/repository/user.repository";
-import {UserRepositoryImpl} from "./data/respository/user-repository.impl";
 import {GetUserByIdUseCase} from "./domain/usecase/get-user-by-id.use-case";
-import {CreateUserUseCase} from "./domain/usecase/create-user.use-case";
+import {RegisterUserUseCase} from "./domain/usecase/register-user.use-case";
 import {UserController} from "./presentation/user/controller/user.controller";
-import {UserDatasource} from "./data/datasource/user.datasource";
 import {LoginUseCase} from "./domain/usecase/login.use-case";
 import {AuthDatasource} from "./data/datasource/auth.datasource";
 import {AuthRepository, AuthRepositoryDI} from "./domain/repository/auth.repository";
@@ -28,11 +25,9 @@ container.bind(AppDatabase).toSelf();
 container.bind(SessionManager).toSelf();
 
 container.bind(NoteDatasource).toSelf();
-container.bind(UserDatasource).toSelf();
 container.bind(AuthDatasource).toSelf();
 
 container.bind<NoteRepository>(NoteRepositoryDI.Name).to(NoteRepositoryImpl);
-container.bind<UserRepository>(UserRepositoryDI.Name).to(UserRepositoryImpl);
 container.bind<AuthRepository>(AuthRepositoryDI.Name).to(AuthRepositoryImpl);
 
 container.bind(CreateNoteUseCase).toSelf();
@@ -41,7 +36,7 @@ container.bind(GetAllNotesUseCase).toSelf();
 container.bind(GetNoteByIdUseCase).toSelf();
 container.bind(UpdateNoteUseCase).toSelf();
 container.bind(GetUserByIdUseCase).toSelf();
-container.bind(CreateUserUseCase).toSelf();
+container.bind(RegisterUserUseCase).toSelf();
 container.bind(LoginUseCase).toSelf();
 
 container.bind(NoteController).toSelf();

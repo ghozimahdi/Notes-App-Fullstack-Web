@@ -1,19 +1,19 @@
 import {inject, injectable} from "inversify";
-import {UserRepository, UserRepositoryDI} from "../repository/user.repository";
-import {CreateUserInput} from "../model/create-user.input";
+import {RegisterUserInput} from "../model/register-user.input";
 import {UserModel} from "../model/user.model";
 import {BadRequestException} from "../model/exception";
+import {AuthRepository, AuthRepositoryDI} from "../repository/auth.repository";
 
 @injectable()
-export class CreateUserUseCase {
+export class RegisterUserUseCase {
   constructor(
-    @inject(UserRepositoryDI.Name) private repository: UserRepository
+    @inject(AuthRepositoryDI.Name) private repository: AuthRepository
   ) {}
 
-  async execute(input: CreateUserInput): Promise<UserModel> {
+  async execute(input: RegisterUserInput): Promise<UserModel> {
     const missingFields = ["username", "password", "email"].filter(
       (field) => {
-        const value = input[field as keyof CreateUserInput];
+        const value = input[field as keyof RegisterUserInput];
         return typeof value !== "string" || !value.trim();
       }
     );
@@ -24,6 +24,6 @@ export class CreateUserUseCase {
       );
     }
 
-    return this.repository.createUser(input);
+    return this.repository.registerUser(input);
   }
 }

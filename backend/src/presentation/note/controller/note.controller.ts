@@ -6,7 +6,7 @@ import {CreateNoteUseCase} from '../../../domain/usecase/create-note.use-case';
 import {UpdateNoteUseCase} from '../../../domain/usecase/update-note.use-case';
 import {DeleteNoteUseCase} from '../../../domain/usecase/delete-note.use-case';
 import {controller, httpGet, httpPost, httpPut, httpDelete} from 'inversify-express-utils';
-import {handleError} from "../../../domain/model/exception";
+import {handleError, InternalServerException} from "../../../domain/model/exception";
 import {UpdateNoteInput} from "../../../domain/model/update-note.input";
 import validateObjectId from "../../middlewares/validateObjectId";
 
@@ -21,7 +21,7 @@ export class NoteController {
   ) {}
 
   @httpGet('/')
-  async getAllNotes(req: Request, res: Response) {
+  async getAllNotes(_: Request, res: Response) {
     try {
       const result = await this.getAllNotesUseCase.execute();
       return res.success(result);

@@ -1,4 +1,4 @@
-export class CreateUserRequest {
+export class RegisterUserRequest {
   username: string;
   email: string;
   password: string;

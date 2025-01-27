@@ -1,12 +1,12 @@
 import {inject, injectable} from "inversify";
-import {UserRepository, UserRepositoryDI} from "../repository/user.repository";
 import {UserModel} from "../model/user.model";
 import {BadRequestException, NotFoundException} from "../model/exception";
+import {AuthRepository, AuthRepositoryDI} from "../repository/auth.repository";
 
 @injectable()
 export class GetUserByIdUseCase {
   constructor(
-    @inject(UserRepositoryDI.Name) private repository: UserRepository
+    @inject(AuthRepositoryDI.Name) private repository: AuthRepository
   ) {}
 
   async execute(id: string): Promise<UserModel> {
