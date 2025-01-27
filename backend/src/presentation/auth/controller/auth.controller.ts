@@ -16,7 +16,7 @@ export class AuthController {
   ) {}
 
   @httpPost('/login', ...validateEmailPassword, sanitizeLoginUser)
-  async login(req: Request, res: Response, next: NextFunction) {
+  async login(req: Request, res: Response) {
     return res.success("Login Succeed");
   }
 
