@@ -1,10 +1,10 @@
 import mongoose, {Schema} from "mongoose";
-import {NoteType} from "../../model/note.data";
+import {NoteTypeEnum} from "../../model/note-type.enum";
 
 export const NoteSchema: Schema = new Schema({
   title: {
     type: String,
-    required: [false, 'The title is cannot empty'],
+    required: [true, 'Title is required'],
   },
   body: {
     type: String,
@@ -21,7 +21,7 @@ export const NoteSchema: Schema = new Schema({
   },
   noteType: {
     type: String,
-    enum: Object.values(NoteType),
+    enum: Object.values(NoteTypeEnum),
     require: true,
   },
   userId: {

@@ -1,6 +1,8 @@
 import {inject, injectable} from "inversify";
 import {AppDatabase} from "../database/app.database";
 import {UserData} from "../model/user.data";
+import bcrypt from "bcrypt";
+import {CreateUserRequest} from "../model/create-user.request";
 
 @injectable()
 export class UserDatasource {
@@ -19,10 +21,14 @@ export class UserDatasource {
     }
   }
 
-  async createUser(user: Omit<UserData, '_id'>): Promise<UserData | null> {
+  async createUser(user: CreateUserRequest): Promise<UserData | null> {
     try {
+      const salt = await bcrypt.genSalt(10);
+      const passwordHas = await bcrypt.hash(user.password, salt);
+
       const data = {
         ...user,
+        password: passwordHas,
         createdAt: new Date().toISOString(),
       };
 

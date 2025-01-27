@@ -10,11 +10,16 @@ import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import {responseEnhancer} from "./presentation/middlewares/responseEnhancer";
 import {appConfig, Flavor} from "./env";
+import {SessionManager} from "./data/session.manager";
+import session from "express-session";
 
 export class App {
   async start() {
     const appDb = container.get(AppDatabase);
     await appDb.connect();
+
+    const sessionManager = container.get(SessionManager);
+    const sessionOption = await sessionManager.createSession();
 
     if (appConfig.flavor === Flavor.DEVELOPMENT) {
       await Seeds.initData(appDb)
@@ -32,6 +37,7 @@ export class App {
 
       app.use(responseEnhancer);
       app.use(cookieParser(appConfig.cookiesSecretKey));
+      app.use(session(sessionOption));
     })
 
     server.setErrorConfig((app) => {

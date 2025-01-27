@@ -20,10 +20,12 @@ import {AuthDatasource} from "./data/datasource/auth.datasource";
 import {AuthRepository, AuthRepositoryDI} from "./domain/repository/auth.repository";
 import {AuthRepositoryImpl} from "./data/respository/auth.repository.impl";
 import {AuthController} from "./presentation/auth/controller/auth.controller";
+import {SessionManager} from "./data/session.manager";
 
 const container = new Container();
 
 container.bind(AppDatabase).toSelf();
+container.bind(SessionManager).toSelf();
 
 container.bind(NoteDatasource).toSelf();
 container.bind(UserDatasource).toSelf();

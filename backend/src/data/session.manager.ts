@@ -1,0 +1,61 @@
+import {SessionOptions} from "express-session";
+import {appConfig, Flavor} from "../env";
+import {RedisStore} from "connect-redis";
+import {createClient, RedisClientType} from "redis";
+import {injectable} from "inversify";
+
+@injectable()
+export class SessionManager {
+  private readonly redisClient: RedisClientType;
+
+  constructor() {
+    this.redisClient = createClient({
+      socket: {
+        host: appConfig.redisHost,
+        port: appConfig.redisPort,
+      },
+    });
+
+    this.redisClient.on("connect", () => console.log("Connected to Redis"));
+    this.redisClient.on("error", (err) => {
+      console.error("Redis Client Error:", err);
+    });
+  }
+
+  async connectRedis(): Promise<void> {
+    if (!this.redisClient.isOpen) {
+      await this.redisClient.connect();
+    }
+  }
+
+  private async getRedisStore(): Promise<RedisStore> {
+    await this.connectRedis();
+
+    return new RedisStore({
+      client: this.redisClient,
+      prefix: "sess:",
+    });
+  }
+
+  async createSession(): Promise<SessionOptions> {
+    const redisStore = await this.getRedisStore();
+
+    return {
+      store: redisStore,
+      secret: appConfig.cookiesSecretKey,
+      resave: false,
+      saveUninitialized: false,
+      cookie: {
+        secure: appConfig.flavor === Flavor.PRODUCTION,
+        httpOnly: true,
+        maxAge: 24 * 60 * 60 * 1000,
+      },
+    };
+  }
+
+  async closeRedis(): Promise<void> {
+    if (this.redisClient.isOpen) {
+      await this.redisClient.disconnect();
+    }
+  }
+}

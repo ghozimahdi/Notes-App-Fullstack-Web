@@ -1,25 +1,24 @@
-import mongoose, {Schema} from "mongoose";
-import {NoteType} from "../../model/note.data";
+import {Schema} from "mongoose";
 
 export const UserSchema: Schema = new Schema({
   username: {
     type: String,
-    required: [true, 'The username is cannot empty'],
+    required: [true, 'Username is required'],
   },
   email: {
     type: String,
-    required: [true, 'The email is cannot empty'],
+    required: [true, 'Email is required'],
   },
   password: {
     type: String,
-    required: [true, 'The password is cannot empty'],
+    required: [true, 'Password is required'],
   },
   createdAt: {
     type: String,
-    required: true,
+    required: [true, 'Created At is required'],
   },
   address: {
-    type: Boolean,
+    type: String,
     default: '',
     required: false,
   },
