@@ -7,6 +7,7 @@ import {inject} from "inversify";
 import {RegisterUserUseCase} from "../../../domain/usecase/register-user.use-case";
 import {sanitizeLoginUser} from "../middlewares/sanitizeLoginUser";
 import {LoginUseCase} from "../../../domain/usecase/login.use-case";
+import {BadRequestException, EmailAlreadyRegisteredException} from "../../../domain/model/exception";
 
 @controller('/auth')
 export class AuthController {
@@ -29,9 +30,17 @@ export class AuthController {
 
   @httpPost('/register', sanitizeCreateUser, ...validateEmailPassword)
   async register(req: Request, res: Response) {
-    const input: RegisterUserInput = req.body;
+    try {
+      const input: RegisterUserInput = req.body;
 
-    const result = await this.createUserUseCase.execute(input);
-    return res.success("Register Succeed", result);
+      const result = await this.createUserUseCase.execute(input);
+      return res.success("Register Succeed", result);
+    } catch (e) {
+      if (e instanceof EmailAlreadyRegisteredException) {
+        throw new BadRequestException('Email is already registered.');
+      }
+
+      throw e;
+    }
   }
 }

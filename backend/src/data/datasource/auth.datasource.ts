@@ -1,8 +1,10 @@
+import {MongoServerError} from 'mongodb';
 import {inject, injectable} from "inversify";
 import {AppDatabase} from "../database/app.database";
 import bcrypt from "bcrypt";
 import {UserData} from "../model/user.data";
 import {RegisterUserRequest} from "../model/register-user.request";
+import {BadRequestException, EmailAlreadyRegisteredException} from "../../domain/model/exception";
 
 @injectable()
 export class AuthDatasource {
@@ -40,6 +42,10 @@ export class AuthDatasource {
 
       return null;
     } catch (e) {
+      const mongoError = e as MongoServerError;
+      if (mongoError.code === 11000) {
+        throw new EmailAlreadyRegisteredException();
+      }
       throw e;
     }
   }

@@ -23,6 +23,9 @@ export class AppDatabase {
   }
 
   userDao() {
-    return mongoose.model<UserData>('User', UserSchema);
+    return mongoose.model<UserData>('User', UserSchema.index(
+      {email: 1},
+      {unique: true}
+    ));
   }
 }

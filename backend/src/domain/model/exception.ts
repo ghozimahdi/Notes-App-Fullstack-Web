@@ -18,6 +18,8 @@ class BadRequestException<T> extends Exception<T> {
   }
 }
 
+class EmailAlreadyRegisteredException extends BadRequestException<null> {}
+
 class UnauthorizedException<T> extends Exception<T> {
   constructor(message = "Unauthorized") {
     super(401, message);
@@ -52,4 +54,5 @@ export {
   UnauthorizedException,
   BadRequestException,
   InternalServerException,
+  EmailAlreadyRegisteredException,
 }
