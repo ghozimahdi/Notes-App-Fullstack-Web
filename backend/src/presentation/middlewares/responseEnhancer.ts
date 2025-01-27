@@ -5,7 +5,11 @@ export const responseEnhancer = (
   res: Response,
   next: NextFunction
 ) => {
-  res.success = (message = "Success", data = null, additionalProps = {}) => {
+  res.success = (
+    message: string = "Success",
+    data: any = null,
+    additionalProps: Record<string, any> = {}
+  ) => {
     res.status(200).json({
       success: true,
       message,
@@ -15,10 +19,10 @@ export const responseEnhancer = (
   };
 
   res.error = (
-    message = "Error",
-    statusCode = 400,
-    data = null,
-    additionalProps = {}
+    message = "Bad Request",
+    statusCode: number = 400,
+    data: any = null,
+    additionalProps: Record<string, any> = {}
   ) => {
     res.status(statusCode).json({
       success: false,
@@ -26,6 +30,24 @@ export const responseEnhancer = (
       data,
       ...additionalProps,
     });
+  };
+
+  res.errorNotFound = (
+    message = "Not Found",
+    statusCode: number = 404,
+    data: any = null,
+    additionalProps: Record<string, any> = {}
+  ) => {
+    res.error(message, statusCode, data, additionalProps);
+  };
+
+  res.errorBadRequest = (
+    message = "Bad Request",
+    statusCode: number = 400,
+    data: any = null,
+    additionalProps: Record<string, any> = {}
+  ) => {
+    res.error(message, statusCode, data, additionalProps);
   };
 
   next();

@@ -18,10 +18,7 @@ export class AuthController {
   async login(req: Request, res: Response, next: NextFunction) {
     res.cookie('token', '1234567890abc')
 
-    return res.status(200).json({
-      success: true,
-      message: "Login Succeed",
-    });
+    return res.success("Login Succeed");
   }
 
   @httpGet('/test')
@@ -29,10 +26,7 @@ export class AuthController {
     res.cookie('token', '1234567890abc')
     res.cookie('userId', '1234567890abc', {signed: true})
 
-    return res.status(200).json({
-      success: true,
-      message: "Login Succeed",
-    });
+    return res.success("Login Succeed");
   }
 
   @httpPost('/register', sanitizeCreateUser, ...validateEmailPassword)
@@ -40,11 +34,7 @@ export class AuthController {
     try {
       const input: CreateUserInput = req.body;
       const result = await this.createUserUseCase.execute(input);
-      return res.status(200).json({
-        success: true,
-        message: "Register Succeed",
-        data: result,
-      });
+      return res.success("Register Succeed", result);
     } catch (e) {
       handleError("Failed to create an user", e);
     }

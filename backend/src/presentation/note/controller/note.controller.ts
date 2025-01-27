@@ -34,43 +34,43 @@ export class NoteController {
   }
 
   @httpGet('/:id', validateObjectId)
-  async getNoteById(req: Request, res: Response, next: NextFunction) {
+  async getNoteById(req: Request, res: Response) {
     try {
       const id = String(req.params.id);
       if (!id) {
-        return next(new BadRequestException("The provided ID is invalid. Please provide an ID."));
+        return res.errorBadRequest("The provided ID is invalid. Please provide an ID.");
       }
 
       const result = await this.getNoteByIdUseCase.execute(id);
       if (!result.id) {
-        return next(new NotFoundException(`Note with id: ${id} not found`));
+        return res.errorNotFound(`Note with id: ${id} not found`);
       }
 
-      return res.success(undefined, result);
+      return res.success(result);
     } catch (e) {
       handleError("Failed to fetch a note", e);
     }
   }
 
   @httpPost('/')
-  async createNote(req: Request, res: Response, next: NextFunction) {
+  async createNote(req: Request, res: Response) {
     try {
       const input: UpdateNoteInput = req.body;
 
       const requiredFields = [input.title, input.body];
       if (requiredFields.some((field) => !field?.trim())) {
-        return next(new BadRequestException("Title and body are required"));
+        return res.errorBadRequest("Title and body are required");
       }
 
       const result = await this.createNoteUseCase.execute(input);
-      return res.success(undefined, result);
+      return res.success(result);
     } catch (e) {
       handleError("Failed to create a note", e);
     }
   }
 
   @httpPut('/:id', validateObjectId)
-  async updateNote(req: Request, res: Response, next: NextFunction) {
+  async updateNote(req: Request, res: Response) {
     try {
       const id = String(req.params.id);
       const {title, body, archived, noteType} = req.body;
@@ -80,13 +80,13 @@ export class NoteController {
       }
 
       if (!id) {
-        return next(new BadRequestException("The provided ID is invalid. Please provide an ID."));
+        return res.errorBadRequest("The provided ID is invalid. Please provide an ID.")
       }
 
       const result = await this.updateNoteUseCase.execute(input);
 
       if (!result.id) {
-        return next(new NotFoundException(`Note with id: ${id} not found`));
+        return res.errorNotFound(`Note with id: ${id} not found`);
       }
 
       return res.success('Success update note', result);
@@ -96,21 +96,21 @@ export class NoteController {
   }
 
   @httpDelete('/:id', validateObjectId)
-  async deleteNote(req: Request, res: Response, next: NextFunction) {
+  async deleteNote(req: Request, res: Response) {
     try {
       const id = String(req.params.id);
 
       if (!id) {
-        return next(new BadRequestException("The provided ID is invalid. Please provide an ID."))
+        return res.errorBadRequest("The provided ID is invalid. Please provide an ID.");
       }
 
       const result = await this.deleteNoteUseCase.execute(id);
 
       if (!result) {
-        return next(new NotFoundException(`Note with id: ${id} not found`))
+        return res.errorNotFound(`Note with id: ${id} not found`);
       }
 
-      return res.success('Successfully delete noted', undefined);
+      return res.success('Successfully delete noted');
     } catch (e) {
       handleError("Failed to delete noted, please try again!", e);
     }
