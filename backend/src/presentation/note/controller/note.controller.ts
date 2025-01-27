@@ -27,7 +27,7 @@ export class NoteController {
       console.log(req.signedCookies)
 
       const result = await this.getAllNotesUseCase.execute();
-      return res.success(undefined, result);
+      return res.success(result);
     } catch (e) {
       handleError("Failed to fetch notes", e)
     }
