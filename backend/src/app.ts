@@ -9,21 +9,29 @@ import {Seeds} from "./seeds";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import {responseEnhancer} from "./presentation/middlewares/responseEnhancer";
+import {appConfig, Flavor} from "./env";
 
 export class App {
   async start() {
     const appDb = container.get(AppDatabase);
     await appDb.connect();
-    await Seeds.initData(appDb)
+
+    if (appConfig.flavor === Flavor.DEVELOPMENT) {
+      await Seeds.initData(appDb)
+    }
 
     const server = new InversifyExpressServer(container, null, {rootPath: '/api'});
     server.setConfig((app) => {
       app.use(express.json({limit: '10kb'}));
       app.use(express.urlencoded({extended: true}));
       app.use(express.static(path.join(__dirname, 'public')));
-      app.use(morgan('dev'));
+
+      if (appConfig.flavor !== Flavor.PRODUCTION) {
+        app.use(morgan('dev'));
+      }
+
       app.use(responseEnhancer);
-      app.use(cookieParser());
+      app.use(cookieParser(appConfig.cookiesSecretKey));
     })
 
     server.setErrorConfig((app) => {

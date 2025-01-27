@@ -5,9 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
+    "stg": "vite --mode staging",
+    "prod": "vite --mode production",
+    "build:dev": "tsc -b && vite build",
+    "build:stg": "vite build --mode staging",
+    "build:prod": "vite build --mode production",
+    "start": "vite preview",
+    "lint": "eslint ."
   },
   "dependencies": {
     "dotenv": "^16.4.7",

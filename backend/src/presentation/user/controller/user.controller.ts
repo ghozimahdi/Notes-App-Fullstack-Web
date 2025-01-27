@@ -21,12 +21,7 @@ export class UserController {
     try {
       const id = String(req.params.id);
       const result = await this.getUserByIdUseCase.execute(id);
-
-      return res.status(200).json({
-        success: true,
-        message: "Succeed",
-        data: result,
-      });
+      return res.success(undefined, result);
     } catch (e) {
       handleError("Failed to fetch an user", e);
     }
@@ -37,11 +32,7 @@ export class UserController {
     try {
       const input: CreateUserInput = req.body;
       const result = await this.createUserUseCase.execute(input);
-      return res.status(200).json({
-        success: true,
-        message: "Succeed",
-        data: result,
-      });
+      return res.success(undefined, result);
     } catch (e) {
       handleError("Failed to create an user", e);
     }

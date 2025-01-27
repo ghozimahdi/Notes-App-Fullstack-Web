@@ -27,6 +27,7 @@ export class AuthController {
   @httpGet('/test')
   async test(req: Request, res: Response) {
     res.cookie('token', '1234567890abc')
+    res.cookie('userId', '1234567890abc', {signed: true})
 
     return res.status(200).json({
       success: true,

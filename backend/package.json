@@ -4,8 +4,12 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "ts-node-dev --respawn --transpile-only src/server.ts",
-    "build": "tsc",
+    "dev": "NODE_ENV=development ts-node-dev --respawn --transpile-only src/server.ts",
+    "stg": "NODE_ENV=staging ts-node-dev --respawn --transpile-only src/server.ts",
+    "prod": "NODE_ENV=production ts-node-dev --respawn --transpile-only src/server.ts",
+    "build:dev": "NODE_ENV=development tsc",
+    "build:stg": "NODE_ENV=staging tsc",
+    "build:prod": "NODE_ENV=production tsc",
     "start": "node dist/server.js"
   },
   "keywords": [],
@@ -16,10 +20,13 @@
     "@types/express": "^5.0.0",
     "@types/node": "^22.10.7",
     "cookie-parser": "^1.4.7",
+    "cookie-signature": "^1.2.2",
+    "dotenv": "^16.4.7",
     "express": "^4.21.2",
     "express-validator": "^7.2.1",
     "inversify": "^6.2.1",
     "inversify-express-utils": "^6.4.10",
+    "morgan": "^1.10.0",
     "reflect-metadata": "^0.2.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.7.3"

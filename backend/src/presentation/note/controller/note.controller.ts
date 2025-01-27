@@ -24,6 +24,7 @@ export class NoteController {
   async getAllNotes(req: Request, res: Response) {
     try {
       console.log(req.cookies)
+      console.log(req.signedCookies)
 
       const result = await this.getAllNotesUseCase.execute();
       return res.success(undefined, result);
