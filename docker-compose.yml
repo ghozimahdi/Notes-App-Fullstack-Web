@@ -11,7 +11,7 @@ services:
         SESSION_SECRET: ${SESSION_SECRET}
     container_name: backend
     ports:
-      - "5000:5000"
+      - "5001:5000"
     environment:
       MONGODB_URI: ${MONGODB_URI}
       REDIS_HOST: ${REDIS_HOST}
