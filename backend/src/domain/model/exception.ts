@@ -1,3 +1,5 @@
+// noinspection JSUnusedGlobalSymbols
+
 class Exception<T> extends Error {
   constructor(public status: number, message: string, public data?: T) {
     super(message);
