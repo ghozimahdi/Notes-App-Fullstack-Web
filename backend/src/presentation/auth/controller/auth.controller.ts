@@ -28,6 +28,17 @@ export class AuthController {
     return res.success("Login Succeed", result);
   }
 
+  @httpPost('/logout', ...validateEmailPassword, sanitizeLoginUser)
+  async logout(req: Request, res: Response) {
+    req.session.destroy((err) => {
+      if (err) {
+        return res.error('Logout Failed', 500)
+      }
+
+      return res.success("Logout Succeed");
+    });
+  }
+
   @httpPost('/register', sanitizeCreateUser, ...validateEmailPassword)
   async register(req: Request, res: Response) {
     try {

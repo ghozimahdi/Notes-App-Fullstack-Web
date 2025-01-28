@@ -13,7 +13,7 @@ export const responseEnhancer = (
     res.status(200).json({
       success: true,
       message,
-      data,
+      ...(data !== null && {data}),
       ...additionalProps,
     });
   };
@@ -27,7 +27,7 @@ export const responseEnhancer = (
     res.status(statusCode).json({
       success: false,
       message,
-      data,
+      ...(data !== null && {data}),
       ...additionalProps,
     });
   };
