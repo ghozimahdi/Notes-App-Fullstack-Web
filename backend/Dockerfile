@@ -2,13 +2,13 @@
 FROM node:18-alpine AS builder
 
 # Set ARG untuk build time variables
-ARG MODE=production
+ARG NODE_ENV=production
 ARG MONGODB_URI
 ARG REDIS_HOST
 ARG SESSION_SECRET
 
 # Set environment variables
-ENV MODE=$MODE
+ENV NODE_ENV=$NODE_ENV
 ENV MONGODB_URI=$MONGODB_URI
 ENV REDIS_HOST=$REDIS_HOST
 ENV SESSION_SECRET=$SESSION_SECRET
@@ -26,13 +26,18 @@ RUN npm install
 COPY . .
 
 # Build TypeScript jika mode production atau staging
-RUN npm run build:$MODE
+RUN npm run build:$NODE_ENV
 
 # Tahap 2: Production Stage
 FROM node:18-alpine
 
+ARG NODE_ENV=production
+ARG MONGODB_URI
+ARG REDIS_HOST
+ARG SESSION_SECRET
+
 # Set environment variables
-ENV MODE=$MODE
+ENV NODE_ENV=$NODE_ENV
 ENV MONGODB_URI=$MONGODB_URI
 ENV REDIS_HOST=$REDIS_HOST
 ENV SESSION_SECRET=$SESSION_SECRET

@@ -14,8 +14,9 @@ RUN npm install
 COPY . .
 
 # Build aplikasi sesuai mode environment
-ARG MODE=prod
-RUN npm run build:${MODE}
+# Gunakan ARG untuk menentukan environment mode
+ARG NODE_ENV=production
+RUN npm run build:$NODE_ENV
 
 # Tahap 2: Production Stage
 FROM nginx:stable-alpine
