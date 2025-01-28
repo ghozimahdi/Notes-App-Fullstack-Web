@@ -4,7 +4,7 @@ import {AppDatabase} from "../database/app.database";
 import bcrypt from "bcrypt";
 import {UserData} from "../model/user.data";
 import {RegisterUserRequest} from "../model/register-user.request";
-import {BadRequestException, EmailAlreadyRegisteredException} from "../../domain/model/exception";
+import {EmailAlreadyRegisteredException} from "../../domain/model/exception";
 
 @injectable()
 export class AuthDatasource {

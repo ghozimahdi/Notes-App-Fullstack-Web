@@ -12,7 +12,6 @@ export class SessionManager {
     this.redisClient = createClient({
       socket: {
         host: appConfig.redisHost,
-        port: appConfig.redisPort,
       },
     });
 
@@ -20,6 +19,9 @@ export class SessionManager {
     this.redisClient.on("error", (err) => {
       console.error("Redis Client Error:", err);
     });
+
+    process.on("SIGINT", this.handleExit.bind(this));
+    process.on("SIGTERM", this.handleExit.bind(this));
   }
 
   async connectRedis(): Promise<void> {
@@ -56,6 +58,12 @@ export class SessionManager {
   async closeRedis(): Promise<void> {
     if (this.redisClient.isOpen) {
       await this.redisClient.disconnect();
+      console.log("Redis connection closed");
     }
+  }
+
+  private async handleExit(): Promise<void> {
+    await this.closeRedis();
+    process.exit(0);
   }
 }

@@ -28,11 +28,10 @@ function getFlavor(): Flavor {
 }
 
 const appConfig = {
-  cookiesSecretKey: getEnvVariable("COOKIES_SECRET_KEY"),
+  cookiesSecretKey: getEnvVariable("SESSION_SECRET"),
   flavor: getFlavor(),
   mongodbUri: getEnvVariable("MONGODB_URI"),
   redisHost: getEnvVariable("REDIS_HOST"),
-  redisPort: parseInt(getEnvVariable("REDIS_PORT"), 10),
 };
 
 

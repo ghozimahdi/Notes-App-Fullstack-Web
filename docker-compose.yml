@@ -1,0 +1,50 @@
+version: "3.9"
+
+services:
+  backend:
+    build:
+      context: ./backend
+      args:
+        MODE: ${MODE:-prod}
+        MONGODB_URI: ${MONGODB_URI}
+        REDIS_HOST: ${REDIS_HOST}
+        SESSION_SECRET: ${SESSION_SECRET}
+    container_name: backend
+    ports:
+      - "5000:5000"
+    environment:
+      MONGODB_URI: ${MONGODB_URI}
+      REDIS_HOST: ${REDIS_HOST}
+      SESSION_SECRET: ${SESSION_SECRET}
+    depends_on:
+      - mongo
+      - redis
+
+  frontend:
+    build:
+      context: ./frontend
+      args:
+        MODE: ${MODE:-prod}
+    container_name: frontend
+    ports:
+      - "3000:80"
+    environment:
+      VITE_BACKEND_URL: http://backend:5000
+      VITE_ENV: ${MODE:-prod}
+
+  mongo:
+    image: mongo:6
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  redis:
+    image: redis
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  mongo-data:
