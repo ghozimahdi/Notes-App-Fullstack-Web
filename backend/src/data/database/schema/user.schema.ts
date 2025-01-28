@@ -1,6 +1,4 @@
 import {Schema} from "mongoose";
-import bcrypt from "bcrypt";
-import {UserData} from "../../model/user.data";
 
 export const UserSchema: Schema = new Schema({
   username: {
@@ -30,16 +28,3 @@ export const UserSchema: Schema = new Schema({
     required: false,
   },
 });
-
-UserSchema.statics.findByCredentials = async function (
-  email: string,
-  password: string
-): Promise<UserData | boolean> {
-  const user = await this.findOne({email});
-  if (!user) {
-    return false;
-  }
-
-  const isMatch = await bcrypt.compare(password, user.password);
-  return isMatch ? user : false;
-};

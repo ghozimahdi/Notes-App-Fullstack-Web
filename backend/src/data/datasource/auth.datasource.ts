@@ -37,21 +37,26 @@ export class AuthDatasource {
   }
 
   async login(email: string, password: string): Promise<UserData | null> {
-    const user = await this.appDb.userDao().findOne({
-      email: email,
-    });
+    const user = await this.findByCredentials(email, password)
 
-    if (!user) {
-      return null;
-    }
-
-    const isMatch = await bcrypt.compare(password ?? '', user?.password ?? '');
-
-    if (isMatch) {
-      const {password, role, ...userWithoutSensitiveData} = user!.toObject();
+    if (user) {
+      const {password, role, ...userWithoutSensitiveData} = user.toObject();
       return userWithoutSensitiveData;
     }
 
     return null;
   }
+
+  async findByCredentials(
+    email: string,
+    password: string
+  ) {
+    const user = await this.appDb.userDao().findOne({email});
+    if (!user) {
+      return null;
+    }
+
+    const isMatch = await bcrypt.compare(password, user?.password ?? '');
+    return isMatch ? user : null;
+  };
 }
