@@ -9,6 +9,7 @@ import {controller, httpGet, httpPost, httpPut, httpDelete} from 'inversify-expr
 import {UpdateNoteInput} from "../../../domain/model/update-note.input";
 import validateObjectId from "../../middlewares/validate.object-id";
 import {rescue} from "../../rescue";
+import {authenticateJWT} from "../../middlewares/auth.middleware";
 
 @controller('/notes')
 export class NoteController {
@@ -20,14 +21,14 @@ export class NoteController {
     @inject(DeleteNoteUseCase) private deleteNoteUseCase: DeleteNoteUseCase
   ) {}
 
-  @httpGet('/')
+  @httpGet('/', authenticateJWT)
   @rescue('Failed to fetch notes')
   async getAllNotes(_: Request, res: Response) {
     const result = await this.getAllNotesUseCase.execute();
     return res.success(result);
   }
 
-  @httpGet('/:id', validateObjectId)
+  @httpGet('/:id', validateObjectId, authenticateJWT)
   @rescue('Failed to fetch a note')
   async getNoteById(req: Request, res: Response) {
     const id = String(req.params.id);
@@ -43,7 +44,7 @@ export class NoteController {
     return res.success(result);
   }
 
-  @httpPost('/')
+  @httpPost('/', authenticateJWT)
   @rescue('Failed to create a note')
   async createNote(req: Request, res: Response) {
     const input: UpdateNoteInput = req.body;
@@ -57,7 +58,7 @@ export class NoteController {
     return res.success(result);
   }
 
-  @httpPut('/:id', validateObjectId)
+  @httpPut('/:id', validateObjectId, authenticateJWT)
   @rescue('Failed to update noted, please try again!')
   async updateNote(req: Request, res: Response) {
     const id = String(req.params.id);
@@ -80,7 +81,7 @@ export class NoteController {
     return res.success('Success update note', result);
   }
 
-  @httpDelete('/:id', validateObjectId)
+  @httpDelete('/:id', validateObjectId, authenticateJWT)
   @rescue('Failed to delete noted, please try again!')
   async deleteNote(req: Request, res: Response) {
     const id = String(req.params.id);
