@@ -2,7 +2,7 @@ import {inject} from "inversify";
 import {controller, httpGet} from "inversify-express-utils";
 import {Request, Response} from "express";
 import {GetUserByIdUseCase} from "../../../domain/usecase/get-user-by-id.use-case";
-import validateObjectId from "../../middlewares/validateObjectId";
+import validateObjectId from "../../middlewares/validate.object-id";
 import {rescue} from "../../rescue";
 
 @controller('/user')

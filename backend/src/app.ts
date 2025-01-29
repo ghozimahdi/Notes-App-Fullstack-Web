@@ -1,6 +1,6 @@
 import 'reflect-metadata';
 import express from 'express';
-import error_handler from "./presentation/middlewares/errorHandler";
+import error_handler from "./presentation/middlewares/error.handler";
 import {InversifyExpressServer} from "inversify-express-utils";
 import {container} from "./inversify.config";
 import path from "path";
@@ -8,7 +8,7 @@ import {AppDatabase} from "./data/database/app.database";
 import {Seeds} from "./seeds";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import {responseEnhancer} from "./presentation/middlewares/responseEnhancer";
+import {responseEnhancer} from "./presentation/middlewares/response.enhancer";
 import {appConfig, Flavor} from "./env";
 import {SessionManager} from "./data/session.manager";
 import session from "express-session";

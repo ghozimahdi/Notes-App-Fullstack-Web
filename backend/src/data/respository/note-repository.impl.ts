@@ -5,7 +5,7 @@ import {noteMapper} from '../mapper/note.mapper';
 import {NoteRepository} from "../../domain/repository/note.repository";
 import {inject, injectable} from "inversify";
 import {UpdateNoteInput} from "../../domain/model/update-note.input";
-import {safeCall} from "../safe-call";
+import {safeCall} from "../safe.call";
 
 @injectable()
 class NoteRepositoryImpl implements NoteRepository {

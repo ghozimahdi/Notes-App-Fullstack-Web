@@ -4,7 +4,7 @@ import {AuthDatasource} from "../datasource/auth.datasource";
 import {UserModel} from "../../domain/model/user.model";
 import {userMapper} from "../mapper/user.mapper";
 import {RegisterUserInput} from "../../domain/model/register-user.input";
-import {safeCall} from "../safe-call";
+import {safeCall} from "../safe.call";
 
 @injectable()
 export class AuthRepositoryImpl implements AuthRepository {

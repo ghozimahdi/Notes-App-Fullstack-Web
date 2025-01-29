@@ -1,11 +1,11 @@
 import {controller, httpPost} from "inversify-express-utils";
 import {Request, Response} from "express";
-import {validateEmailPassword} from "../../middlewares/validateEmailPassword";
-import {sanitizeCreateUser} from "../../user/middlewares/sanitizeCreateUser";
+import {validateEmailPassword} from "../../middlewares/validate.email-password";
+import {sanitizeCreateUser} from "../../user/middlewares/sanitize.create-user";
 import {RegisterUserInput} from "../../../domain/model/register-user.input";
 import {inject} from "inversify";
 import {RegisterUserUseCase} from "../../../domain/usecase/register-user.use-case";
-import {sanitizeLoginUser} from "../middlewares/sanitizeLoginUser";
+import {sanitizeLoginUser} from "../middlewares/sanitize.login-user";
 import {LoginUseCase} from "../../../domain/usecase/login.use-case";
 import {BadRequestException, EmailAlreadyRegisteredException} from "../../../domain/model/exception";
 import {rescue} from "../../rescue";
