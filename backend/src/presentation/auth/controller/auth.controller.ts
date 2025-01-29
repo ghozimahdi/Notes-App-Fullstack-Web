@@ -8,6 +8,7 @@ import {RegisterUserUseCase} from "../../../domain/usecase/register-user.use-cas
 import {sanitizeLoginUser} from "../middlewares/sanitizeLoginUser";
 import {LoginUseCase} from "../../../domain/usecase/login.use-case";
 import {BadRequestException, EmailAlreadyRegisteredException} from "../../../domain/model/exception";
+import {rescue} from "../../rescue";
 
 @controller('/auth')
 export class AuthController {
@@ -17,6 +18,7 @@ export class AuthController {
   ) {}
 
   @httpPost('/login', ...validateEmailPassword, sanitizeLoginUser)
+  @rescue()
   async login(req: Request, res: Response) {
     const {email, password} = req.body;
     const result = await this.loginUseCase.execute(email, password);
@@ -29,10 +31,11 @@ export class AuthController {
   }
 
   @httpPost('/logout', ...validateEmailPassword, sanitizeLoginUser)
+  @rescue()
   async logout(req: Request, res: Response) {
     req.session.destroy((err) => {
       if (err) {
-        return res.error('Logout Failed', 500)
+        return res.errorServer('Logout Failed')
       }
 
       return res.success("Logout Succeed");
@@ -40,18 +43,11 @@ export class AuthController {
   }
 
   @httpPost('/register', sanitizeCreateUser, ...validateEmailPassword)
+  @rescue()
   async register(req: Request, res: Response) {
-    try {
-      const input: RegisterUserInput = req.body;
+    const input: RegisterUserInput = req.body;
 
-      const result = await this.createUserUseCase.execute(input);
-      return res.success("Register Succeed", result);
-    } catch (e) {
-      if (e instanceof EmailAlreadyRegisteredException) {
-        throw new BadRequestException('Email is already registered.');
-      }
-
-      throw e;
-    }
+    const result = await this.createUserUseCase.execute(input);
+    return res.success("Register Succeed", result);
   }
 }

@@ -6,9 +6,9 @@ import {CreateNoteUseCase} from '../../../domain/usecase/create-note.use-case';
 import {UpdateNoteUseCase} from '../../../domain/usecase/update-note.use-case';
 import {DeleteNoteUseCase} from '../../../domain/usecase/delete-note.use-case';
 import {controller, httpGet, httpPost, httpPut, httpDelete} from 'inversify-express-utils';
-import {handleError, InternalServerException} from "../../../domain/model/exception";
 import {UpdateNoteInput} from "../../../domain/model/update-note.input";
 import validateObjectId from "../../middlewares/validateObjectId";
+import {rescue} from "../../rescue";
 
 @controller('/notes')
 export class NoteController {
@@ -21,95 +21,80 @@ export class NoteController {
   ) {}
 
   @httpGet('/')
+  @rescue('Failed to fetch notes')
   async getAllNotes(_: Request, res: Response) {
-    try {
-      const result = await this.getAllNotesUseCase.execute();
-      return res.success(result);
-    } catch (e) {
-      handleError("Failed to fetch notes", e)
-    }
+    const result = await this.getAllNotesUseCase.execute();
+    return res.success(result);
   }
 
   @httpGet('/:id', validateObjectId)
+  @rescue('Failed to fetch a note')
   async getNoteById(req: Request, res: Response) {
-    try {
-      const id = String(req.params.id);
-      if (!id) {
-        return res.errorBadRequest("The provided ID is invalid. Please provide an ID.");
-      }
-
-      const result = await this.getNoteByIdUseCase.execute(id);
-      if (!result.id) {
-        return res.errorNotFound(`Note with id: ${id} not found`);
-      }
-
-      return res.success(result);
-    } catch (e) {
-      handleError("Failed to fetch a note", e);
+    const id = String(req.params.id);
+    if (!id) {
+      return res.errorBadRequest("The provided ID is invalid. Please provide an ID.");
     }
+
+    const result = await this.getNoteByIdUseCase.execute(id);
+    if (!result.id) {
+      return res.errorNotFound(`Note with id: ${id} not found`);
+    }
+
+    return res.success(result);
   }
 
   @httpPost('/')
+  @rescue('Failed to create a note')
   async createNote(req: Request, res: Response) {
-    try {
-      const input: UpdateNoteInput = req.body;
+    const input: UpdateNoteInput = req.body;
 
-      const requiredFields = [input.title, input.body];
-      if (requiredFields.some((field) => !field?.trim())) {
-        return res.errorBadRequest("Title and body are required");
-      }
-
-      const result = await this.createNoteUseCase.execute(input);
-      return res.success(result);
-    } catch (e) {
-      handleError("Failed to create a note", e);
+    const requiredFields = [input.title, input.body];
+    if (requiredFields.some((field) => !field?.trim())) {
+      return res.errorBadRequest("Title and body are required");
     }
+
+    const result = await this.createNoteUseCase.execute(input);
+    return res.success(result);
   }
 
   @httpPut('/:id', validateObjectId)
+  @rescue('Failed to update noted, please try again!')
   async updateNote(req: Request, res: Response) {
-    try {
-      const id = String(req.params.id);
-      const {title, body, archived, noteType} = req.body;
+    const id = String(req.params.id);
+    const {title, body, archived, noteType} = req.body;
 
-      const input: UpdateNoteInput = {
-        id, title, body, archived, noteType,
-      }
-
-      if (!id) {
-        return res.errorBadRequest("The provided ID is invalid. Please provide an ID.")
-      }
-
-      const result = await this.updateNoteUseCase.execute(input);
-
-      if (!result.id) {
-        return res.errorNotFound(`Note with id: ${id} not found`);
-      }
-
-      return res.success('Success update note', result);
-    } catch (e) {
-      handleError('Failed to update noted, please try again!', e);
+    const input: UpdateNoteInput = {
+      id, title, body, archived, noteType,
     }
+
+    if (!id) {
+      return res.errorBadRequest("The provided ID is invalid. Please provide an ID.")
+    }
+
+    const result = await this.updateNoteUseCase.execute(input);
+
+    if (!result.id) {
+      return res.errorNotFound(`Note with id: ${id} not found`);
+    }
+
+    return res.success('Success update note', result);
   }
 
   @httpDelete('/:id', validateObjectId)
+  @rescue('Failed to delete noted, please try again!')
   async deleteNote(req: Request, res: Response) {
-    try {
-      const id = String(req.params.id);
+    const id = String(req.params.id);
 
-      if (!id) {
-        return res.errorBadRequest("The provided ID is invalid. Please provide an ID.");
-      }
-
-      const result = await this.deleteNoteUseCase.execute(id);
-
-      if (!result) {
-        return res.errorNotFound(`Note with id: ${id} not found`);
-      }
-
-      return res.success('Successfully delete noted');
-    } catch (e) {
-      handleError("Failed to delete noted, please try again!", e);
+    if (!id) {
+      return res.errorBadRequest("The provided ID is invalid. Please provide an ID.");
     }
+
+    const result = await this.deleteNoteUseCase.execute(id);
+
+    if (!result) {
+      return res.errorNotFound(`Note with id: ${id} not found`);
+    }
+
+    return res.success('Successfully delete noted');
   }
 }

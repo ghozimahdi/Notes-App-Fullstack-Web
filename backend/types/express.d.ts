@@ -13,6 +13,7 @@ declare global {
 
     export interface Response {
       success(message: string): void;
+
       success(data: any): void;
 
       success(
@@ -27,22 +28,26 @@ declare global {
       ): void;
 
       error: (
-        message: string,
         statusCode?: number,
+        message: string,
+        data?: any,
+        additionalProps?: Record<string, any>
+      ) => void;
+
+      errorServer: (
+        message: string,
         data?: any,
         additionalProps?: Record<string, any>
       ) => void;
 
       errorBadRequest: (
         message?: string,
-        statusCode?: number,
         data?: any,
         additionalProps?: Record<string, any>
       ) => void;
 
       errorNotFound: (
         message?: string,
-        statusCode?: number,
         data?: any,
         additionalProps?: Record<string, any>
       ) => void;

@@ -19,8 +19,8 @@ export const responseEnhancer = (
   };
 
   res.error = (
-    message = "Bad Request",
     statusCode: number = 400,
+    message = "Bad Request",
     data: any = null,
     additionalProps: Record<string, any> = {}
   ) => {
@@ -32,22 +32,28 @@ export const responseEnhancer = (
     });
   };
 
-  res.errorNotFound = (
-    message = "Not Found",
-    statusCode: number = 404,
+  res.errorServer = (
+    message = "Internal Server Error",
     data: any = null,
     additionalProps: Record<string, any> = {}
   ) => {
-    res.error(message, statusCode, data, additionalProps);
+    res.error(500, message, data, additionalProps);
+  };
+
+  res.errorNotFound = (
+    message = "Not Found",
+    data: any = null,
+    additionalProps: Record<string, any> = {}
+  ) => {
+    res.error(404, message, data, additionalProps);
   };
 
   res.errorBadRequest = (
     message = "Bad Request",
-    statusCode: number = 400,
     data: any = null,
     additionalProps: Record<string, any> = {}
   ) => {
-    res.error(message, statusCode, data, additionalProps);
+    res.error(400, message, data, additionalProps);
   };
 
   next();
