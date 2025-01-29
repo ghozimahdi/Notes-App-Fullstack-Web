@@ -23,14 +23,14 @@ export function rescue(message?: string) {
         if (isDevelopment) {
           console.error(`[Error] Controller: ${className}`);
           console.error(`[Error] Method: ${methodName}`);
-          console.error(`[Error] Request Body:`, req);
+          console.error(`[Error] Request Body:`, req.body);
+          console.error(`[Error] Request Params:`, req.params);
           console.error(`[Error] Details:`, error);
         }
 
         res.errorServer(
-          message || 'Internal Server Error',
-          undefined,
-          isDevelopment ? {error: defaultMessage} : undefined,
+          message ?? `Internal Server Error${isDevelopment ? `: ${defaultMessage}` : ''}`,
+          undefined
         );
       }
     };
