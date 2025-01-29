@@ -4,7 +4,7 @@ import {NoteData} from "../model/note.data";
 import {NoteSchema} from "./schema/note.schema";
 import {UserSchema} from "./schema/user.schema";
 import {UserData} from "../model/user.data";
-import {appConfig} from "../../env";
+import {appConfig} from "../../config/env";
 
 @injectable()
 export class AppDatabase {

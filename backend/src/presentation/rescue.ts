@@ -1,5 +1,5 @@
 import {Response, Request} from "express";
-import {appConfig, Flavor} from "../env";
+import {appConfig, Flavor} from "../config/env";
 
 export function rescue(message?: string) {
   return function (

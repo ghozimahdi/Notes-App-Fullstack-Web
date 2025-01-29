@@ -1,6 +1,6 @@
 import {NextFunction, Request, Response} from "express";
 import {Exception} from "../../domain/model/exception";
-import {appConfig, Flavor} from "../../env";
+import {appConfig, Flavor} from "../../config/env";
 
 const errorHandler = (err: any, req: Request, res: Response, _: NextFunction) => {
   const isDevelopmentMode = appConfig.flavor !== Flavor.PRODUCTION;

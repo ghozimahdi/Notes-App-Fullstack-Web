@@ -1,5 +1,5 @@
 import {SessionOptions} from "express-session";
-import {appConfig, Flavor} from "../env";
+import {appConfig, Flavor} from "../config/env";
 import {RedisStore} from "connect-redis";
 import {createClient, RedisClientType} from "redis";
 import {injectable} from "inversify";

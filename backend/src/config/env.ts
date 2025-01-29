@@ -32,6 +32,8 @@ const appConfig = {
   flavor: getFlavor(),
   mongodbUri: getEnvVariable("MONGODB_URI"),
   redisHost: getEnvVariable("REDIS_HOST"),
+  jwtSecret: getEnvVariable("JWT_SECRET"),
+  tokenExpiration: getEnvVariable("TOKEN_EXPIRATION"),
 };
 
 

@@ -1,6 +1,6 @@
 import {MongoServerError} from "mongodb";
 import {EmailAlreadyRegisteredException, Exception, InternalServerException} from "../domain/model/exception";
-import {appConfig, Flavor} from "../env";
+import {appConfig, Flavor} from "../config/env";
 
 export function safeCall() {
   return function (

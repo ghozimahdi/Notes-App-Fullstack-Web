@@ -1,4 +1,4 @@
-import {AppDatabase} from "./data/database/app.database";
+import {AppDatabase} from "../data/database/app.database";
 
 export class Seeds {
   static async initData(appDb: AppDatabase) {
