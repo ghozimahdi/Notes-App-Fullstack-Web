@@ -1,6 +1,24 @@
-import {Schema} from "mongoose";
+import {Schema, Document} from "mongoose";
+import bcrypt from "bcrypt";
+import {UserData} from "../../model/user.data";
 
-export const UserSchema: Schema = new Schema({
+interface IUserSchema extends Document {
+  username: string;
+  email: string;
+  password: string;
+  createdAt: string;
+  address: string;
+  role: number;
+
+  comparePassword(password: string): Promise<boolean>;
+
+  findByCredentials(
+    email: string,
+    password: string
+  ): Promise<UserData>;
+}
+
+const UserSchema: Schema = new Schema<IUserSchema>({
   username: {
     type: String,
     required: [true, "Username is required"],
@@ -28,3 +46,15 @@ export const UserSchema: Schema = new Schema({
     required: false,
   },
 });
+
+UserSchema.pre<IUserSchema>("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.password = await bcrypt.hash(this.password, 10);
+  next();
+});
+
+UserSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
+  return bcrypt.compare(password, this.password);
+};
+
+export default UserSchema;

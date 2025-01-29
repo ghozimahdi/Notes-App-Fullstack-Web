@@ -12,6 +12,11 @@ import {responseEnhancer} from "./presentation/middlewares/response.enhancer";
 import {appConfig, Flavor} from "./config/env";
 import {SessionManager} from "./data/session.manager";
 import session from "express-session";
+import helmet from "helmet";
+import rateLimit from "express-rate-limit";
+import compression from "compression";
+import cors from 'cors';
+import {passportStrategyInitialize} from "./config/passport.strategy";
 
 export class App {
   async start() {
@@ -38,6 +43,18 @@ export class App {
       app.use(responseEnhancer);
       app.use(cookieParser(appConfig.cookiesSecretKey));
       app.use(session(sessionOption));
+
+      app.use(helmet());
+      app.use(cors());
+      app.use(compression());
+      app.use(passportStrategyInitialize());
+
+      const limiter = rateLimit({
+        windowMs: 15 * 60 * 1000,
+        limit: 100,
+        message: 'Too many requests from this IP, please try again later.'
+      });
+      app.use(limiter);
     })
 
     server.setErrorConfig((app) => {

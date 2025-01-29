@@ -1,6 +1,7 @@
 // noinspection JSUnusedGlobalSymbols
 
 import "express";
+import {UserModel} from "../src/domain/model/user.model";
 
 declare global {
   namespace Express {
@@ -9,6 +10,8 @@ declare global {
         token?: string;
         [key: string]: string | undefined;
       };
+
+      user: UserModel;
     }
 
     export interface Response {
@@ -35,7 +38,7 @@ declare global {
       ) => void;
 
       errorServer: (
-        message: string,
+        message?: string,
         data?: any,
         additionalProps?: Record<string, any>
       ) => void;

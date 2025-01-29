@@ -1,7 +1,16 @@
-import mongoose, {Schema} from "mongoose";
+import mongoose, {Schema, Document} from "mongoose";
 import {NoteTypeEnum} from "../../model/note-type.enum";
 
-export const NoteSchema: Schema = new Schema({
+interface INoteSchema extends Document {
+  title: string;
+  body: string;
+  createdAt: string;
+  archived: boolean;
+  noteType: NoteTypeEnum;
+  userId: mongoose.Schema.Types.ObjectId;
+}
+
+export const NoteSchema: Schema = new Schema<INoteSchema>({
   title: {
     type: String,
     required: [true, 'Title is required'],
