@@ -17,7 +17,6 @@ import rateLimit from "express-rate-limit";
 import compression from "compression";
 import cors from 'cors';
 import {passportStrategyInitialize} from "./config/passport.strategy";
-import {requestLogger} from "./presentation/middlewares/logger.middleware";
 
 export class App {
   async start() {
@@ -56,8 +55,6 @@ export class App {
         message: 'Too many requests from this IP, please try again later.'
       });
       app.use(limiter);
-
-      app.use(requestLogger);
     })
 
     server.setErrorConfig((app) => {

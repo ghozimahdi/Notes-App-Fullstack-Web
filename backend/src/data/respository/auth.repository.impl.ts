@@ -27,7 +27,14 @@ export class AuthRepositoryImpl implements AuthRepository {
   @safeCall()
   async login(email: string, password: string): Promise<UserModel> {
     const userData = await this.authDataSource.login(email, password);
-    return userMapper.mapFromData(userData);
+    const userModel = userMapper.mapFromData(userData);
+
+    if (userModel.id) {
+      const refreshToken = this.createAccessToken(userModel.id)
+      await this.redisDatasource.saveRefreshToken(userModel.id, refreshToken)
+    }
+
+    return userModel;
   }
 
   @safeCall()

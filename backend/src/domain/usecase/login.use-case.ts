@@ -1,9 +1,7 @@
 import {inject, injectable} from "inversify";
 import {AuthRepository, AuthRepositoryDI} from "../repository/auth.repository";
-import {BadRequestException} from "../model/exception";
+import {BadRequestException, NotFoundException} from "../model/exception";
 import {UserModel} from "../model/user.model";
-import jwt from "jsonwebtoken";
-import {appConfig} from "../../config/env";
 
 @injectable()
 export class LoginUseCase {
@@ -21,9 +19,11 @@ export class LoginUseCase {
 
     const user = await this.repository.login(email, password);
 
-    const token = jwt.sign(user, appConfig.jwtSecret, {
-      expiresIn: '1h',
-    });
+    if (!user.id) {
+      throw new NotFoundException('Invalid email or password.')
+    }
+
+    const token = this.repository.createAccessToken(user.id);
 
     return {
       user: user,

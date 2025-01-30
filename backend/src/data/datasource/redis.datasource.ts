@@ -3,11 +3,13 @@ import {SessionManager} from "../database/session.manager";
 
 @injectable()
 export class RedisDatasource {
+  static REFRESH_TOKEN_EXPIRATION: number = 604800;
+
   constructor(@inject(SessionManager) private session: SessionManager) {}
 
-  async saveRefreshToken(userId: string, token: string, expiresIn: number): Promise<void> {
+  async saveRefreshToken(userId: string, token: string): Promise<void> {
     const key = `refresh:${userId}`;
-    await this.session.set<string>(key, token, expiresIn);
+    await this.session.set<string>(key, token, RedisDatasource.REFRESH_TOKEN_EXPIRATION);
   }
 
   async getRefreshToken(userId: string): Promise<string | null> {

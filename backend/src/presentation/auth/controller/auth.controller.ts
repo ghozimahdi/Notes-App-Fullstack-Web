@@ -25,10 +25,6 @@ export class AuthController {
     const {email, password} = req.body;
     const result = await this.loginUseCase.execute(email, password);
 
-    if (!result.user.id) {
-      return res.errorNotFound('Invalid email or password.');
-    }
-
     return res.success("Login Succeed", result.user, {
       token: result.token,
     });
