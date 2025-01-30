@@ -11,7 +11,7 @@ declare global {
         [key: string]: string | undefined;
       };
 
-      user: UserModel;
+      userModel: UserModel;
     }
 
     export interface Response {

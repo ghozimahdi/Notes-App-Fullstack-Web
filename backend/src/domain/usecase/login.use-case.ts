@@ -7,7 +7,7 @@ import {UserModel} from "../model/user.model";
 export class LoginUseCase {
   constructor(@inject(AuthRepositoryDI.Name) private repository: AuthRepository) {}
 
-  async execute(email: string, password: string): Promise<{ user: UserModel, token: string }> {
+  async execute(email: string, password: string): Promise<UserModel> {
     const requiredFields = [
       email,
       password,
@@ -23,11 +23,6 @@ export class LoginUseCase {
       throw new NotFoundException('Invalid email or password.')
     }
 
-    const token = this.repository.createAccessToken(user.id);
-
-    return {
-      user: user,
-      token: token,
-    }
+    return user;
   }
 }

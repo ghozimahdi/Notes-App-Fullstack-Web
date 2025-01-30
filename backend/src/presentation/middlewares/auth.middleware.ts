@@ -2,11 +2,25 @@ import {Request, Response, NextFunction} from 'express';
 import passport from 'passport';
 import jwt from 'jsonwebtoken';
 import {appConfig} from "../../config/env";
+import {UserModel} from "../../domain/model/user.model";
 
-const authenticateJWT = passport.authenticate('jwt', {session: false});
+const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
+  passport.authenticate("jwt", {session: false}, (err: any, user: UserModel) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (!user) {
+      return res.error(401, 'Unauthorized');
+    }
+
+    req.userModel = new UserModel(user);
+    next();
+  })(req, res, next);
+};
 
 const authorize = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.user) return res.error(403, 'Unauthorized');
+  if (!req.userModel) return res.error(403, 'Unauthorized');
   next();
 };
 

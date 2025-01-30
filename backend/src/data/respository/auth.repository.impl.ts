@@ -6,6 +6,9 @@ import {userMapper} from "../mapper/user.mapper";
 import {RegisterUserInput} from "../../domain/model/register-user.input";
 import {safeCall} from "../safe.call";
 import {RedisDatasource} from "../datasource/redis.datasource";
+import {SaveRefreshTokenInput} from "../../domain/model/save-refresh-token.input";
+import {saveRefreshTokenMapper} from "../mapper/save-refresh-token.mapper";
+import type {StringValue} from "ms";
 
 @injectable()
 export class AuthRepositoryImpl implements AuthRepository {
@@ -15,26 +18,26 @@ export class AuthRepositoryImpl implements AuthRepository {
   ) {}
 
   @safeCall()
-  verifyRefreshToken(token: string): Promise<boolean> {
-    return this.authDataSource.verifyRefreshToken(token);
+  async saveRefreshToken(input: SaveRefreshTokenInput): Promise<void> {
+    const request = saveRefreshTokenMapper.mapFromDomain(input);
+    await this.redisDatasource.saveRefreshToken(request);
   }
 
   @safeCall()
-  createAccessToken(id: string): string {
-    return this.authDataSource.createAccessToken(id);
+  async verifyRefreshToken(userId: string): Promise<boolean> {
+    const refreshToken = await this.redisDatasource.getRefreshToken(userId);
+    return this.authDataSource.verifyRefreshToken(refreshToken);
+  }
+
+  @safeCall()
+  createAccessToken(id: string, expiresIn: StringValue = '1h'): string {
+    return this.authDataSource.createAccessToken(id, expiresIn);
   }
 
   @safeCall()
   async login(email: string, password: string): Promise<UserModel> {
     const userData = await this.authDataSource.login(email, password);
-    const userModel = userMapper.mapFromData(userData);
-
-    if (userModel.id) {
-      const refreshToken = this.createAccessToken(userModel.id)
-      await this.redisDatasource.saveRefreshToken(userModel.id, refreshToken)
-    }
-
-    return userModel;
+    return userMapper.mapFromData(userData);
   }
 
   @safeCall()
