@@ -2,25 +2,26 @@ import 'reflect-metadata';
 import express from 'express';
 import error_handler from "./presentation/middlewares/error.handler";
 import {InversifyExpressServer} from "inversify-express-utils";
-import {container} from "./config/inversify.config";
+import {container} from "./config/injector";
 import path from "path";
-import {AppDatabase} from "./data/database/app.database";
+import {MongoDatabase} from "./data/database/mongo.database";
 import {Seeds} from "./config/seeds";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import {responseEnhancer} from "./presentation/middlewares/response.enhancer";
 import {appConfig, Flavor} from "./config/env";
-import {SessionManager} from "./data/session.manager";
+import {SessionManager} from "./data/database/session.manager";
 import session from "express-session";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import compression from "compression";
 import cors from 'cors';
 import {passportStrategyInitialize} from "./config/passport.strategy";
+import {requestLogger} from "./presentation/middlewares/logger.middleware";
 
 export class App {
   async start() {
-    const appDb = container.get(AppDatabase);
+    const appDb = container.get(MongoDatabase);
     await appDb.connect();
 
     const sessionManager = container.get(SessionManager);
@@ -55,6 +56,8 @@ export class App {
         message: 'Too many requests from this IP, please try again later.'
       });
       app.use(limiter);
+
+      app.use(requestLogger);
     })
 
     server.setErrorConfig((app) => {

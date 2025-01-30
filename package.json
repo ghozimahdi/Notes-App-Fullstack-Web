@@ -18,20 +18,7 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
-    "@types/compression": "^1.7.5",
-    "@types/cors": "^2.8.17",
-    "@types/helmet": "^0.0.48",
-    "@types/jsonwebtoken": "^9.0.8",
-    "@types/passport-jwt": "^4.0.1",
     "concurrently": "^9.1.2"
   },
-  "dependencies": {
-    "compression": "^1.7.5",
-    "cors": "^2.8.5",
-    "express-rate-limit": "^7.5.0",
-    "helmet": "^8.0.0",
-    "jsonwebtoken": "^9.0.2",
-    "passport": "^0.7.0",
-    "passport-jwt": "^4.0.1"
-  }
+  "dependencies": {}
 }

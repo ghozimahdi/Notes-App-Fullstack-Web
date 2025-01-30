@@ -8,7 +8,7 @@ import {GetAllNotesUseCase} from "../domain/usecase/get-all-notes.use-case";
 import {GetNoteByIdUseCase} from "../domain/usecase/get-note-by-id.use-case";
 import {UpdateNoteUseCase} from "../domain/usecase/update-note.use-case";
 import {NoteController} from "../presentation/note/controller/note.controller";
-import {AppDatabase} from "../data/database/app.database";
+import {MongoDatabase} from "../data/database/mongo.database";
 import {GetUserByIdUseCase} from "../domain/usecase/get-user-by-id.use-case";
 import {RegisterUserUseCase} from "../domain/usecase/register-user.use-case";
 import {UserController} from "../presentation/user/controller/user.controller";
@@ -17,27 +17,29 @@ import {AuthDatasource} from "../data/datasource/auth.datasource";
 import {AuthRepository, AuthRepositoryDI} from "../domain/repository/auth.repository";
 import {AuthRepositoryImpl} from "../data/respository/auth.repository.impl";
 import {AuthController} from "../presentation/auth/controller/auth.controller";
-import {SessionManager} from "../data/session.manager";
+import {SessionManager} from "../data/database/session.manager";
+import {RedisDatasource} from "../data/datasource/redis.datasource";
 
 const container = new Container();
 
-container.bind(AppDatabase).toSelf();
-container.bind(SessionManager).toSelf();
+container.bind(MongoDatabase).toSelf().inSingletonScope();
+container.bind(SessionManager).toSelf().inSingletonScope();
 
-container.bind(NoteDatasource).toSelf();
-container.bind(AuthDatasource).toSelf();
+container.bind(RedisDatasource).toSelf().inSingletonScope();
+container.bind(NoteDatasource).toSelf().inSingletonScope();
+container.bind(AuthDatasource).toSelf().inSingletonScope();
 
-container.bind<NoteRepository>(NoteRepositoryDI.Name).to(NoteRepositoryImpl);
-container.bind<AuthRepository>(AuthRepositoryDI.Name).to(AuthRepositoryImpl);
+container.bind<NoteRepository>(NoteRepositoryDI.Name).to(NoteRepositoryImpl).inSingletonScope();
+container.bind<AuthRepository>(AuthRepositoryDI.Name).to(AuthRepositoryImpl).inSingletonScope();
 
-container.bind(CreateNoteUseCase).toSelf();
-container.bind(DeleteNoteUseCase).toSelf();
-container.bind(GetAllNotesUseCase).toSelf();
-container.bind(GetNoteByIdUseCase).toSelf();
-container.bind(UpdateNoteUseCase).toSelf();
-container.bind(GetUserByIdUseCase).toSelf();
-container.bind(RegisterUserUseCase).toSelf();
-container.bind(LoginUseCase).toSelf();
+container.bind(CreateNoteUseCase).toSelf().inSingletonScope();
+container.bind(DeleteNoteUseCase).toSelf().inSingletonScope();
+container.bind(GetAllNotesUseCase).toSelf().inSingletonScope();
+container.bind(GetNoteByIdUseCase).toSelf().inSingletonScope();
+container.bind(UpdateNoteUseCase).toSelf().inSingletonScope();
+container.bind(GetUserByIdUseCase).toSelf().inSingletonScope();
+container.bind(RegisterUserUseCase).toSelf().inSingletonScope();
+container.bind(LoginUseCase).toSelf().inSingletonScope();
 
 container.bind(NoteController).toSelf();
 container.bind(UserController).toSelf();

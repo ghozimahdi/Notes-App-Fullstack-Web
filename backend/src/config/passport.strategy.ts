@@ -1,6 +1,6 @@
 import {Strategy as JwtStrategy, ExtractJwt, StrategyOptions} from 'passport-jwt';
 import {appConfig} from './env';
-import {container} from './inversify.config';
+import {container} from './injector';
 import passport from "passport";
 import {Handler} from "express";
 import {GetUserByIdUseCase} from "../domain/usecase/get-user-by-id.use-case";

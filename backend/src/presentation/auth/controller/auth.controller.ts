@@ -9,6 +9,8 @@ import {sanitizeLoginUser} from "../middlewares/sanitize.login-user";
 import {LoginUseCase} from "../../../domain/usecase/login.use-case";
 import {BadRequestException, EmailAlreadyRegisteredException} from "../../../domain/model/exception";
 import {rescue} from "../../rescue";
+import jwt from "jsonwebtoken";
+import {appConfig} from "../../../config/env";
 
 @controller('/auth')
 export class AuthController {
@@ -23,11 +25,22 @@ export class AuthController {
     const {email, password} = req.body;
     const result = await this.loginUseCase.execute(email, password);
 
-    if (!result.id) {
+    if (!result.user.id) {
       return res.errorNotFound('Invalid email or password.');
     }
 
-    return res.success("Login Succeed", result);
+    return res.success("Login Succeed", result.user, {
+      token: result.token,
+    });
+  }
+
+  @httpPost('/refresh-token', ...validateEmailPassword, sanitizeLoginUser)
+  @rescue()
+  async refreshToken(req: Request, res: Response) {
+    //todo: create refresh token
+    //todo: create flexible schema with static method mongodb
+
+    return res.success('Succeed');
   }
 
   @httpPost('/logout', ...validateEmailPassword, sanitizeLoginUser)

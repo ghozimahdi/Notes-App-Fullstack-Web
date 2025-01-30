@@ -1,10 +1,10 @@
 import {NoteData} from "../model/note.data";
 import {inject, injectable} from "inversify";
-import {AppDatabase} from "../database/app.database";
+import {MongoDatabase} from "../database/mongo.database";
 
 @injectable()
 class NoteDatasource {
-  constructor(@inject(AppDatabase) private appDb: AppDatabase) {}
+  constructor(@inject(MongoDatabase) private appDb: MongoDatabase) {}
 
   async getAllNotes(): Promise<NoteData[]> {
     return this.appDb.noteDao().find({});

@@ -1,12 +1,15 @@
 import {inject, injectable} from "inversify";
-import {AppDatabase} from "../database/app.database";
+import {MongoDatabase} from "../database/mongo.database";
 import bcrypt from "bcrypt";
 import {UserData} from "../model/user.data";
 import {RegisterUserRequest} from "../model/register-user.request";
+import jwt from "jsonwebtoken";
+import {appConfig} from "../../config/env";
+import type {StringValue} from "ms";
 
 @injectable()
 export class AuthDatasource {
-  constructor(@inject(AppDatabase) private appDb: AppDatabase) {}
+  constructor(@inject(MongoDatabase) private appDb: MongoDatabase) {}
 
   async getUserById(id: string): Promise<UserData | null> {
     const user = this.appDb.userDao().findById(id);
@@ -18,11 +21,8 @@ export class AuthDatasource {
   }
 
   async registerUser(user: RegisterUserRequest): Promise<UserData | null> {
-    const passwordHash = await bcrypt.hash(user.password, 10);
-
     const data = {
       ...user,
-      password: passwordHash,
       createdAt: new Date().toISOString(),
     };
 
@@ -34,6 +34,30 @@ export class AuthDatasource {
     }
 
     return null;
+  }
+
+  createAccessToken(id: string, expiresIn: StringValue = '1h'): string {
+    return jwt.sign({id: id}, appConfig.jwtSecret, {expiresIn: expiresIn});
+  }
+
+  private async verifyJwtToken(token: string, secret: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      jwt.verify(token, secret, (err, decoded) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(decoded);
+      });
+    });
+  }
+
+  async verifyRefreshToken(token: string): Promise<boolean> {
+    try {
+      await this.verifyJwtToken(token, appConfig.jwtSecret);
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   async login(email: string, password: string): Promise<UserData | null> {

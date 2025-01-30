@@ -1,7 +1,7 @@
-import {AppDatabase} from "../data/database/app.database";
+import {MongoDatabase} from "../data/database/mongo.database";
 
 export class Seeds {
-  static async initData(appDb: AppDatabase) {
+  static async initData(appDb: MongoDatabase) {
     await appDb.noteDao().insertMany([
       {
         "title": "First Note",

@@ -1,5 +1,5 @@
 import {SessionOptions} from "express-session";
-import {appConfig, Flavor} from "../config/env";
+import {appConfig, Flavor} from "../../config/env";
 import {RedisStore} from "connect-redis";
 import {createClient, RedisClientType} from "redis";
 import {injectable} from "inversify";
@@ -22,6 +22,29 @@ export class SessionManager {
 
     process.on("SIGINT", this.handleExit.bind(this));
     process.on("SIGTERM", this.handleExit.bind(this));
+  }
+
+  async set<T>(key: string, value: T, expiresIn?: number): Promise<void> {
+    await this.connectRedis();
+    const data = JSON.stringify(value);
+    if (expiresIn) {
+      await this.redisClient.set(key, data, {
+        EX: expiresIn,
+      });
+    } else {
+      await this.redisClient.set(key, data);
+    }
+  }
+
+  async get<T>(key: string): Promise<T | null> {
+    await this.connectRedis();
+    const data = await this.redisClient.get(key);
+    return data ? JSON.parse(data) as T : null;
+  }
+
+  async del(key: string): Promise<void> {
+    await this.connectRedis();
+    await this.redisClient.del(key);
   }
 
   async connectRedis(): Promise<void> {

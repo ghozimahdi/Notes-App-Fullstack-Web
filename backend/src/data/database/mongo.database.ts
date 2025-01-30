@@ -2,12 +2,12 @@ import mongoose from "mongoose";
 import {injectable} from "inversify";
 import {NoteData} from "../model/note.data";
 import {NoteSchema} from "./schema/note.schema";
-import {UserSchema} from "./schema/user.schema";
 import {UserData} from "../model/user.data";
 import {appConfig} from "../../config/env";
+import UserSchema from "./schema/user.schema";
 
 @injectable()
-export class AppDatabase {
+export class MongoDatabase {
   async connect() {
     try {
       await mongoose.connect(appConfig.mongodbUri);
