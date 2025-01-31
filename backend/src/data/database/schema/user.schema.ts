@@ -53,8 +53,4 @@ UserSchema.pre<IUserSchema>("save", async function (next) {
   next();
 });
 
-UserSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
-  return bcrypt.compare(password, this.password);
-};
-
 export default UserSchema;
