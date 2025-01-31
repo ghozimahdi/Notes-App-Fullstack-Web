@@ -4,17 +4,27 @@ import {container} from './injector';
 import passport from "passport";
 import {Handler} from "express";
 import {GetUserByIdUseCase} from "../domain/usecase/get-user-by-id.use-case";
+import {RedisDatasource} from "../data/datasource/redis.datasource";
 
 const configureJwtStrategy = () => {
   const opts: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: appConfig.jwtSecret,
+    passReqToCallback: true,
   };
 
-  return new JwtStrategy(opts, async (jwtPayload, done) => {
-    const getUserByIdUseCase = container.get(GetUserByIdUseCase);
-
+  return new JwtStrategy(opts, async (req, jwtPayload, done) => {
     try {
+      const getUserByIdUseCase = container.get(GetUserByIdUseCase);
+      const redisDataSource = container.get(RedisDatasource);
+
+      const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
+      const data = await redisDataSource.getTokenData(jwtPayload.id);
+
+      if (!data || data.accessToken !== accessToken) {
+        return done(null, false);
+      }
+
       const user = await getUserByIdUseCase.execute(jwtPayload.id);
       if (user) return done(null, user);
       return done(null, false);

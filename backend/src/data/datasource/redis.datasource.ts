@@ -6,18 +6,18 @@ import {SaveRefreshTokenData} from "../model/save-refresh-token.data";
 export class RedisDatasource {
   constructor(@inject(SessionManager) private session: SessionManager) {}
 
-  async saveRefreshToken(request: SaveRefreshTokenData): Promise<void> {
+  async saveTokenData(request: SaveRefreshTokenData): Promise<void> {
     const key = `refresh:${request.userId}`;
     const expiresIn = this.parseTimeToSeconds(request.expiresIn);
     await this.session.set<SaveRefreshTokenData>(key, request, expiresIn);
   }
 
-  async getRefreshToken(userId: string): Promise<SaveRefreshTokenData | null> {
+  async getTokenData(userId: string): Promise<SaveRefreshTokenData | null> {
     const key = `refresh:${userId}`;
     return await this.session.get<SaveRefreshTokenData>(key);
   }
 
-  async deleteRefreshToken(userId: string): Promise<void> {
+  async deleteTokenData(userId: string): Promise<void> {
     const key = `refresh:${userId}`;
     await this.session.del(key);
   }

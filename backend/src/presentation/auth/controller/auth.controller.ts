@@ -55,6 +55,7 @@ export class AuthController {
     await this.saveRefreshTokenUseCase.execute({
       expiresIn: expiresIn,
       ip: userIp,
+      accessToken: token,
       refreshToken: refreshToken,
       userAgent: userAgent,
       userId: result.id,

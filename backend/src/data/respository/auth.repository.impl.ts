@@ -21,20 +21,20 @@ export class AuthRepositoryImpl implements AuthRepository {
 
   @safeCall()
   async deleteRefreshToken(id: string): Promise<boolean> {
-    await this.redisDatasource.deleteRefreshToken(id)
+    await this.redisDatasource.deleteTokenData(id)
     return true;
   }
 
   @safeCall()
   async saveRefreshToken(input: SaveRefreshTokenInput): Promise<void> {
     const request = saveRefreshTokenMapper.mapFromDomain(input);
-    await this.redisDatasource.saveRefreshToken(request);
+    await this.redisDatasource.saveTokenData(request);
   }
 
   @safeCall()
   async verifyAndGetRefreshToken(refreshToken: string): Promise<RefreshTokenModel> {
     const userId = await this.authDataSource.verifyRefreshToken(refreshToken);
-    const refreshTokenData = await this.redisDatasource.getRefreshToken(userId);
+    const refreshTokenData = await this.redisDatasource.getTokenData(userId);
     return refreshTokenMapper.mapFromData(refreshTokenData);
   }
 
