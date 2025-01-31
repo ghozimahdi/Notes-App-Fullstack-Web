@@ -1,5 +1,6 @@
 import {Response, Request} from "express";
 import {appConfig, Flavor} from "../config/env";
+import {EmailAlreadyRegisteredException, InvalidTokenException, TokenExpiredException} from "../domain/model/exception";
 
 export function rescue(message?: string) {
   return function (
@@ -28,7 +29,15 @@ export function rescue(message?: string) {
           console.error(`[Error] Details:`, error);
         }
 
-        res.errorServer(
+        if (error instanceof EmailAlreadyRegisteredException) {
+          return res.errorBadRequest('Email is already registered.');
+        }
+
+        if (error instanceof TokenExpiredException || error instanceof InvalidTokenException) {
+          return res.error(401, 'Invalid or expired token.');
+        }
+
+        return res.errorServer(
           message ?? `Internal Server Error${isDevelopment ? `: ${defaultMessage}` : ''}`,
           undefined
         );

@@ -17,8 +17,7 @@ const errorHandler = (err: any, req: Request, res: Response, _: NextFunction) =>
   } else {
     res.status(500).json({
       success: false,
-      message: "Internal Server Error",
-      error: isDevelopmentMode ? err.message : undefined,
+      message: `Internal Server Error${isDevelopmentMode ? ` : ${err.message}` : undefined}`,
     });
   }
 };

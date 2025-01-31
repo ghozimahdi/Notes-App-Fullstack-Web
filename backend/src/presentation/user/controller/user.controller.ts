@@ -4,7 +4,7 @@ import {Request, Response} from "express";
 import {GetUserByIdUseCase} from "../../../domain/usecase/get-user-by-id.use-case";
 import validateObjectId from "../../middlewares/validate.object-id";
 import {rescue} from "../../rescue";
-import {authenticateJWT} from "../../middlewares/auth.middleware";
+import {passportAuth} from "../../middlewares/auth.middleware";
 
 @controller('/user')
 export class UserController {
@@ -12,7 +12,7 @@ export class UserController {
     @inject(GetUserByIdUseCase) private getUserByIdUseCase: GetUserByIdUseCase,
   ) {}
 
-  @httpGet('/:id', validateObjectId, authenticateJWT)
+  @httpGet('/:id', validateObjectId, passportAuth)
   @rescue('Failed to fetch an user')
   async getUserById(req: Request, res: Response) {
     const id = String(req.params.id);

@@ -9,9 +9,13 @@ import {sanitizeLoginUser} from "../middlewares/sanitize.login-user";
 import {LoginUseCase} from "../../../domain/usecase/login.use-case";
 import {rescue} from "../../rescue";
 import {SaveRefreshTokenUseCase} from "../../../domain/usecase/save-refresh-token.use-case";
-import {VerifyRefreshTokenUseCase} from "../../../domain/usecase/verify-refresh-token.use-case";
+import {CheckRefreshTokenValidUseCase} from "../../../domain/usecase/check-refresh-token-valid.use-case";
 import {CreateAccessTokenUseCase} from "../../../domain/usecase/create-access-token.use-case";
-import {authenticateJWT, authorize} from "../../middlewares/auth.middleware";
+import {BadRequestException} from "../../../domain/model/exception";
+import {passportAuth} from "../../middlewares/auth.middleware";
+import {DeleteRefreshTokenUseCase} from "../../../domain/usecase/delete-refresh-token.use-case";
+import {limitedLogin} from "../middlewares/limited.login";
+import {asyncMiddlewareWrapper} from "../../middlewares/asyncMiddlewareWrapper";
 
 @controller('/auth')
 export class AuthController {
@@ -19,8 +23,9 @@ export class AuthController {
     @inject(RegisterUserUseCase) private createUserUseCase: RegisterUserUseCase,
     @inject(LoginUseCase) private loginUseCase: LoginUseCase,
     @inject(SaveRefreshTokenUseCase) private saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
-    @inject(VerifyRefreshTokenUseCase) private verifyRefreshTokenUseCase: VerifyRefreshTokenUseCase,
+    @inject(CheckRefreshTokenValidUseCase) private checkRefreshTokenValidUseCase: CheckRefreshTokenValidUseCase,
     @inject(CreateAccessTokenUseCase) private createAccessTokenUseCase: CreateAccessTokenUseCase,
+    @inject(DeleteRefreshTokenUseCase) private deleteRefreshTokenUseCase: DeleteRefreshTokenUseCase,
   ) {}
 
   private getUserIp(req: Request): string {
@@ -28,7 +33,12 @@ export class AuthController {
     return typeof forwarded === "string" ? forwarded.split(",")[0].trim() : req.socket.remoteAddress || "Unknown";
   }
 
-  @httpPost('/login', ...validateEmailPassword, sanitizeLoginUser)
+  @httpPost(
+    '/login',
+    limitedLogin,
+    ...validateEmailPassword,
+    sanitizeLoginUser,
+  )
   @rescue()
   async login(req: Request, res: Response) {
     const {email, password} = req.body;
@@ -50,31 +60,35 @@ export class AuthController {
       userId: result.id,
     });
 
-    console.log(token);
-    return res.success("Login Succeed", result, {token});
+    return res.success("Login Succeed", result, {token, refreshToken});
   }
 
-  @httpPost('/refresh-token', authorize)
+  @httpPost('/refresh-token')
   @rescue()
   async refreshToken(req: Request, res: Response) {
-    const id = req.userModel.id;
-    console.log(id);
-    //todo: create refresh token
-    //todo: create flexible schema with static method mongodb
+    const refreshToken = req.body.refreshToken;
 
-    return res.success('Succeed');
+    if (!refreshToken) {
+      throw new BadRequestException('Refresh token is required');
+    }
+
+    const model = await this.checkRefreshTokenValidUseCase.execute(refreshToken);
+    const accessToken = this.createAccessTokenUseCase.execute(model.userId);
+
+    return res.success('Token refreshed', undefined, {accessToken});
   }
 
-  @httpPost('/logout', ...validateEmailPassword, sanitizeLoginUser)
-  @rescue()
+  @httpPost('/logout', passportAuth)
+  @rescue('Logout Failed')
   async logout(req: Request, res: Response) {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.errorServer('Logout Failed')
-      }
+    await Promise.all([
+      this.deleteRefreshTokenUseCase.executor(req.userModel.id),
+      new Promise<void>((resolve, reject) =>
+        req.session.destroy((err) => (err ? reject(err) : resolve()))
+      )
+    ]);
 
-      return res.success("Logout Succeed");
-    });
+    return res.success("Logout Succeed");
   }
 
   @httpPost('/register', sanitizeCreateUser, ...validateEmailPassword)

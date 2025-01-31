@@ -2,6 +2,7 @@ import {UserModel} from "../model/user.model";
 import {RegisterUserInput} from "../model/register-user.input";
 import type {StringValue} from "ms";
 import {SaveRefreshTokenInput} from "../model/save-refresh-token.input";
+import {RefreshTokenModel} from "../model/refresh-token.model";
 
 const AuthRepositoryDI = {
   Name: Symbol.for('AuthRepository'),
@@ -12,9 +13,11 @@ interface AuthRepository {
 
   getUserById(id: string): Promise<UserModel>;
 
+  deleteRefreshToken(id: string): Promise<boolean>;
+
   registerUser(input: RegisterUserInput): Promise<UserModel>;
 
-  verifyRefreshToken(userId: string): Promise<boolean>;
+  verifyAndGetRefreshToken(refreshToken: string): Promise<RefreshTokenModel>;
 
   saveRefreshToken(input: SaveRefreshTokenInput): Promise<void>;
 

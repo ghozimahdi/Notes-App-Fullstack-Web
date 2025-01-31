@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken';
 import {appConfig} from "../../config/env";
 import {UserModel} from "../../domain/model/user.model";
 
-const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
+const passportAuth = (req: Request, res: Response, next: NextFunction) => {
   passport.authenticate("jwt", {session: false}, (err: any, user: UserModel) => {
     if (err) {
       return next(err);
@@ -14,14 +14,9 @@ const authenticateJWT = (req: Request, res: Response, next: NextFunction) => {
       return res.error(401, 'Unauthorized');
     }
 
-    req.userModel = new UserModel(user);
+    req.userModel = user;
     next();
   })(req, res, next);
-};
-
-const authorize = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.userModel) return res.error(403, 'Unauthorized');
-  next();
 };
 
 const authMiddleware = async (req: Request, res: Response, next: NextFunction) => {
@@ -45,4 +40,4 @@ const authMiddleware = async (req: Request, res: Response, next: NextFunction) =
   }
 };
 
-export {authorize, authenticateJWT};
+export {passportAuth};

@@ -9,6 +9,8 @@ import {RedisDatasource} from "../datasource/redis.datasource";
 import {SaveRefreshTokenInput} from "../../domain/model/save-refresh-token.input";
 import {saveRefreshTokenMapper} from "../mapper/save-refresh-token.mapper";
 import type {StringValue} from "ms";
+import {refreshTokenMapper} from "../mapper/refresh-token.mapper";
+import {RefreshTokenModel} from "../../domain/model/refresh-token.model";
 
 @injectable()
 export class AuthRepositoryImpl implements AuthRepository {
@@ -18,15 +20,22 @@ export class AuthRepositoryImpl implements AuthRepository {
   ) {}
 
   @safeCall()
+  async deleteRefreshToken(id: string): Promise<boolean> {
+    await this.redisDatasource.deleteRefreshToken(id)
+    return true;
+  }
+
+  @safeCall()
   async saveRefreshToken(input: SaveRefreshTokenInput): Promise<void> {
     const request = saveRefreshTokenMapper.mapFromDomain(input);
     await this.redisDatasource.saveRefreshToken(request);
   }
 
   @safeCall()
-  async verifyRefreshToken(userId: string): Promise<boolean> {
-    const refreshToken = await this.redisDatasource.getRefreshToken(userId);
-    return this.authDataSource.verifyRefreshToken(refreshToken);
+  async verifyAndGetRefreshToken(refreshToken: string): Promise<RefreshTokenModel> {
+    const userId = await this.authDataSource.verifyRefreshToken(refreshToken);
+    const refreshTokenData = await this.redisDatasource.getRefreshToken(userId);
+    return refreshTokenMapper.mapFromData(refreshTokenData);
   }
 
   @safeCall()

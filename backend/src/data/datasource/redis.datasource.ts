@@ -12,10 +12,9 @@ export class RedisDatasource {
     await this.session.set<SaveRefreshTokenData>(key, request, expiresIn);
   }
 
-  async getRefreshToken(userId: string): Promise<string> {
+  async getRefreshToken(userId: string): Promise<SaveRefreshTokenData | null> {
     const key = `refresh:${userId}`;
-    const data = await this.session.get<SaveRefreshTokenData>(key);
-    return data ? data.refreshToken : '';
+    return await this.session.get<SaveRefreshTokenData>(key);
   }
 
   async deleteRefreshToken(userId: string): Promise<void> {

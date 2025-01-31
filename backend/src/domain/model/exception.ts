@@ -22,11 +22,16 @@ class BadRequestException<T> extends Exception<T> {
 
 class EmailAlreadyRegisteredException extends BadRequestException<null> {}
 
+
 class UnauthorizedException<T> extends Exception<T> {
   constructor(message = "Unauthorized") {
     super(401, message);
   }
 }
+
+class TokenExpiredException extends UnauthorizedException<null> {}
+
+class InvalidTokenException extends UnauthorizedException<null> {}
 
 class ForbiddenException<T> extends Exception<T> {
   constructor(message = "Forbidden") {
@@ -54,6 +59,8 @@ export {
   ForbiddenException,
   NotFoundException,
   UnauthorizedException,
+  TokenExpiredException,
+  InvalidTokenException,
   BadRequestException,
   InternalServerException,
   EmailAlreadyRegisteredException,

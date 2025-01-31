@@ -21,7 +21,8 @@ import {SessionManager} from "../data/database/session.manager";
 import {RedisDatasource} from "../data/datasource/redis.datasource";
 import {CreateAccessTokenUseCase} from "../domain/usecase/create-access-token.use-case";
 import {SaveRefreshTokenUseCase} from "../domain/usecase/save-refresh-token.use-case";
-import {VerifyRefreshTokenUseCase} from "../domain/usecase/verify-refresh-token.use-case";
+import {CheckRefreshTokenValidUseCase} from "../domain/usecase/check-refresh-token-valid.use-case";
+import {DeleteRefreshTokenUseCase} from "../domain/usecase/delete-refresh-token.use-case";
 
 const container = new Container();
 
@@ -45,7 +46,8 @@ container.bind(RegisterUserUseCase).toSelf().inSingletonScope();
 container.bind(LoginUseCase).toSelf().inSingletonScope();
 container.bind(CreateAccessTokenUseCase).toSelf().inSingletonScope();
 container.bind(SaveRefreshTokenUseCase).toSelf().inSingletonScope();
-container.bind(VerifyRefreshTokenUseCase).toSelf().inSingletonScope();
+container.bind(CheckRefreshTokenValidUseCase).toSelf().inSingletonScope();
+container.bind(DeleteRefreshTokenUseCase).toSelf().inSingletonScope();
 
 container.bind(NoteController).toSelf();
 container.bind(UserController).toSelf();

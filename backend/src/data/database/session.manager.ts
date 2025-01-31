@@ -89,4 +89,15 @@ export class SessionManager {
     await this.closeRedis();
     process.exit(0);
   }
+
+  async rateLimit(key: string, maxRequests: number, windowMs: number): Promise<boolean> {
+    await this.connectRedis();
+
+    const currentHits = await this.redisClient.incr(key);
+    if (currentHits === 1) {
+      await this.redisClient.expire(key, Math.ceil(windowMs / 1000));
+    }
+
+    return currentHits <= maxRequests;
+  }
 }

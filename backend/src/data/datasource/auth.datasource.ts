@@ -40,24 +40,16 @@ export class AuthDatasource {
     return jwt.sign({id: id}, appConfig.jwtSecret, {expiresIn: expiresIn});
   }
 
-  private async verifyJwtToken(token: string, secret: string): Promise<any> {
+  async verifyRefreshToken(token: string): Promise<string> {
     return new Promise((resolve, reject) => {
-      jwt.verify(token, secret, (err, decoded) => {
+      jwt.verify(token, appConfig.jwtSecret, (err, decoded: any) => {
         if (err) {
           return reject(err);
         }
-        resolve(decoded);
+
+        resolve(decoded.id);
       });
     });
-  }
-
-  async verifyRefreshToken(token: string): Promise<boolean> {
-    try {
-      await this.verifyJwtToken(token, appConfig.jwtSecret);
-      return true;
-    } catch (e) {
-      return false;
-    }
   }
 
   async login(email: string, password: string): Promise<UserData | null> {

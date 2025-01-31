@@ -2,10 +2,10 @@ import {inject, injectable} from "inversify";
 import {AuthRepository, AuthRepositoryDI} from "../repository/auth.repository";
 
 @injectable()
-export class VerifyRefreshTokenUseCase {
+export class DeleteRefreshTokenUseCase {
   constructor(@inject(AuthRepositoryDI.Name) private repository: AuthRepository) {}
 
-  execute(userId: string) {
-    return this.repository.verifyRefreshToken(userId);
+  executor(userId: string) {
+    return this.repository.deleteRefreshToken(userId);
   }
 }
