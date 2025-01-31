@@ -13,13 +13,13 @@ interface AuthRepository {
 
   getUserById(id: string): Promise<UserModel>;
 
-  deleteRefreshToken(id: string): Promise<boolean>;
+  deleteTokenData(id: string): Promise<boolean>;
 
   registerUser(input: RegisterUserInput): Promise<UserModel>;
 
   verifyAndGetRefreshToken(refreshToken: string): Promise<RefreshTokenModel>;
 
-  saveRefreshToken(input: SaveRefreshTokenInput): Promise<void>;
+  saveTokenData(input: SaveRefreshTokenInput): Promise<void>;
 
   createAccessToken(id: string, expiresIn?: StringValue): string
 }

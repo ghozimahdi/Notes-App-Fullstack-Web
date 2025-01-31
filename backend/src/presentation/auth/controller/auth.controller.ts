@@ -8,12 +8,12 @@ import {RegisterUserUseCase} from "../../../domain/usecase/register-user.use-cas
 import {sanitizeLoginUser} from "../middlewares/sanitize.login-user";
 import {LoginUseCase} from "../../../domain/usecase/login.use-case";
 import {rescue} from "../../rescue";
-import {SaveRefreshTokenUseCase} from "../../../domain/usecase/save-refresh-token.use-case";
+import {SaveTokenDataUseCase} from "../../../domain/usecase/save-token-data.use-case";
 import {CheckRefreshTokenValidUseCase} from "../../../domain/usecase/check-refresh-token-valid.use-case";
 import {CreateAccessTokenUseCase} from "../../../domain/usecase/create-access-token.use-case";
 import {BadRequestException} from "../../../domain/model/exception";
 import {passportAuth} from "../../middlewares/auth.middleware";
-import {DeleteRefreshTokenUseCase} from "../../../domain/usecase/delete-refresh-token.use-case";
+import {DeleteTokenDataUseCase} from "../../../domain/usecase/delete-token-data.use-case";
 import {limitedLogin} from "../middlewares/limited.login";
 import {asyncMiddlewareWrapper} from "../../middlewares/asyncMiddlewareWrapper";
 
@@ -22,10 +22,10 @@ export class AuthController {
   constructor(
     @inject(RegisterUserUseCase) private createUserUseCase: RegisterUserUseCase,
     @inject(LoginUseCase) private loginUseCase: LoginUseCase,
-    @inject(SaveRefreshTokenUseCase) private saveRefreshTokenUseCase: SaveRefreshTokenUseCase,
+    @inject(SaveTokenDataUseCase) private saveRefreshTokenUseCase: SaveTokenDataUseCase,
     @inject(CheckRefreshTokenValidUseCase) private checkRefreshTokenValidUseCase: CheckRefreshTokenValidUseCase,
     @inject(CreateAccessTokenUseCase) private createAccessTokenUseCase: CreateAccessTokenUseCase,
-    @inject(DeleteRefreshTokenUseCase) private deleteRefreshTokenUseCase: DeleteRefreshTokenUseCase,
+    @inject(DeleteTokenDataUseCase) private deleteRefreshTokenUseCase: DeleteTokenDataUseCase,
   ) {}
 
   private getUserIp(req: Request): string {
