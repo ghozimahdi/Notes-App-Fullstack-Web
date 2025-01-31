@@ -12,7 +12,7 @@ export class AuthDatasource {
   constructor(@inject(MongoDatabase) private appDb: MongoDatabase) {}
 
   async getUserById(id: string): Promise<UserData | null> {
-    const user = this.appDb.userDao().findById(id);
+    const user = await this.appDb.userDao().findById(id);
     if (!user) {
       return null;
     }
