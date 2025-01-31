@@ -10,6 +10,7 @@ const configureJwtStrategy = () => {
   const opts: StrategyOptions = {
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
     secretOrKey: appConfig.jwtSecret,
+    // optional, remove req on the below strategy "async (req...."
     passReqToCallback: true,
   };
 
@@ -18,6 +19,7 @@ const configureJwtStrategy = () => {
       const getUserByIdUseCase = container.get(GetUserByIdUseCase);
       const redisDataSource = container.get(RedisDatasource);
 
+      // this is purpose for more secure so, this is force user one device one token
       const accessToken = ExtractJwt.fromAuthHeaderAsBearerToken()(req);
       const data = await redisDataSource.getTokenData(jwtPayload.id);
 

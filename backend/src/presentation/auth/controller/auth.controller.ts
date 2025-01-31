@@ -55,6 +55,8 @@ export class AuthController {
     await this.saveRefreshTokenUseCase.execute({
       expiresIn: expiresIn,
       ip: userIp,
+      // this is purpose for more secure so, this is force user one device one token
+      // remove accessToken when you want user can access on other devices
       accessToken: token,
       refreshToken: refreshToken,
       userAgent: userAgent,
