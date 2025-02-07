@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+}
+
+p, h2 {
+    color: #1a1a1a;
+    padding: 0;
+    margin: 0;
+}
+
+.page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    place-items: center;
+    min-width: 320px;
+    min-height: 100vh;
+}
+
+.main {
+    box-sizing: border-box;
+    padding: 1rem 2rem 1rem 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    background: #ffffff;
+    height: 50vh;
+    width: 70vh;
+    border-radius: 1rem;
+}
+
+input {
+    width: 100%;
+    height: 2.5rem;
+    font-size: 1rem;
+    outline: none;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px 40px 10px 10px;
+}

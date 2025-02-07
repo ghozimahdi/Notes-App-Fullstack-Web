@@ -1,9 +1,9 @@
 import {lazy} from "react";
 
 const routesConfig = {
-  home: "/",
+  login: "/",
+  home: "/home",
   about: "/about",
-  login: "/login",
   notFound: "*",
 };
 
