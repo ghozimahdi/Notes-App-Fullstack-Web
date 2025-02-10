@@ -1,14 +1,20 @@
 import style from "./HomePage.module.css";
+import NoteItem from "./components/NoteItem.tsx";
 
 function HomePage() {
   return (
     <>
       <nav className={style.navbar}>
-        <p className={style.titlePage}>List Notes</p>
+        <p>List Notes</p>
+        <div>
+          <button>Add</button>
+        </div>
       </nav>
       <main>
         <div>
-          <p>Content</p>
+          <NoteItem/>
+          <NoteItem/>
+          <NoteItem/>
         </div>
       </main>
     </>
