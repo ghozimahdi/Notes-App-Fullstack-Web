@@ -6,9 +6,9 @@
     "dev": "concurrently \"npm run dev --prefix frontend\" \"PORT=5001 npm run dev --prefix backend\"",
     "stg": "concurrently \"npm run stg --prefix frontend\" \"PORT=5002 npm run stg --prefix backend\"",
     "prod": "concurrently \"npm run prod --prefix frontend\" \"PORT=5003 npm run prod --prefix backend\"",
-    "build:dev": "npm run build:dev --prefix backend && npm run build:dev --prefix frontend",
-    "build:stg": "npm run build:stg --prefix backend && npm run build:stg --prefix frontend",
-    "build:prod": "npm run build:prod --prefix backend && npm run build:prod --prefix frontend",
+    "build:dev": "npm run build:development --prefix backend && npm run build:development --prefix frontend",
+    "build:stg": "npm run build:staging --prefix backend && npm run build:staging --prefix frontend",
+    "build:prod": "npm run build:production --prefix backend && npm run build:production --prefix frontend",
     "start": "concurrently \"npm run start --prefix frontend\" \"npm run start --prefix backend\"",
     "lint": "eslint .",
     "preview": "vite preview"

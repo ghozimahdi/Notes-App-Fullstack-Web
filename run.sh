@@ -1,10 +1,13 @@
 #!/bin/bash
 
-# Only Backend
-docker-compose up --build backend_dev
+# ================= Restart ===========
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml down
+# =====================================
+# run dev
+docker-compose -f docker-compose.yml -f docker-compose.dev.yml up -d --build
 
-# Only Frontend
-docker-compose up --build frontend_dev
+# run staging
+docker-compose -f docker-compose.yml -f docker-compose.staging.yml up -d --build
 
-# Run
-docker-compose up --build frontend_dev backend_dev
+# run prod
+docker-compose -f docker-compose.yml -f docker-compose.prod.yml up -d --build

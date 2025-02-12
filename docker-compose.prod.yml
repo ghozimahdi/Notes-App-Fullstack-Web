@@ -1,0 +1,28 @@
+services:
+  frontend_prod:
+    build:
+      context: ./frontend
+      args:
+        NODE_ENV: production
+    container_name: frontend_prod
+    ports:
+      - "3003:80"
+    environment:
+      VITE_BACKEND_URL: http://backend_prod:5000
+      VITE_ENV: production
+    depends_on:
+      - backend_prod
+
+  backend_prod:
+    build:
+      context: ./backend
+      args:
+        NODE_ENV: production
+    container_name: backend_prod
+    ports:
+      - "5003:5000"
+    depends_on:
+      - mongo
+      - redis
+    env_file:
+      - .env.production

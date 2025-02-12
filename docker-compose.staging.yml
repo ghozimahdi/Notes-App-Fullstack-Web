@@ -1,0 +1,29 @@
+services:
+  frontend_staging:
+    build:
+      context: ./frontend
+      args:
+        NODE_ENV: staging
+    container_name: frontend_staging
+    ports:
+      - "3002:80"
+    environment:
+      VITE_BACKEND_URL: http://backend_staging:5000
+      VITE_ENV: staging
+    depends_on:
+      - backend_staging
+
+  backend_staging:
+    build:
+      context: ./backend
+      args:
+        NODE_ENV: staging
+        MONGODB_URI: mongodb://mongo:27017/note_db_staging
+        REDIS_HOST: redis
+        SESSION_SECRET: staging_secret
+    container_name: backend_staging
+    ports:
+      - "5002:5000"
+    depends_on:
+      - mongo
+      - redis
